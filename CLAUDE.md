@@ -42,9 +42,12 @@
 - DB cleanup: In afterEach/beforeEach, delete child tables BEFORE parent tables (foreign key order)
   Example: db.prepare("DELETE FROM posts").run(); THEN db.prepare("DELETE FROM categories").run();
 - Test isolation: Each test must create its own test data — never depend on data from other tests
-- Unique data: Use unique values per test (e.g., `test-user-${Date.now()}`) to avoid UNIQUE constraint violations
+- Test isolation: Use user-scoped cleanup (WHERE userId = ?) instead of global DELETE FROM — tests run in PARALLEL so global deletes destroy other test files' data
+- Test isolation: Each test within a describe block must set up its own data — never assume data from a prior test still exists
+- Unique data: Use UNIQUE emails per test FILE (e.g., `test-p0001-${Date.now()}@example.com`) to avoid UNIQUE constraint violations across parallel test files
+- Never use hardcoded IDs (e.g., "test-category-1") in raw SQL — always use actual IDs returned from create functions
 - better-sqlite3: All DB calls are SYNCHRONOUS — use db.prepare().run(), NOT await db.prepare().run()
-- Timestamps: Never rely on insertion order for "latest" queries — use explicit ORDER BY or deterministic test data
+- Timestamps: Never rely on insertion order for "latest" queries — add `rowid DESC` as tiebreaker in ORDER BY clauses (e.g., ORDER BY createdAt DESC, rowid DESC)
 - API route tests: Use new Request() with proper headers, test both success and error cases
 - Auth in tests: Use createSessionToken(userId) from @/lib/auth — set it as cookie header in Request
 
