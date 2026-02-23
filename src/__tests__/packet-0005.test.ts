@@ -18,18 +18,8 @@ describe("LearningSample & StyleProfile Models (packet-0005)", () => {
   let categoryId: string;
 
   beforeEach(async () => {
-    const db = getDb();
-
-    // Clear test data
-    db.exec(`
-      DELETE FROM learning_samples;
-      DELETE FROM style_profiles;
-      DELETE FROM categories;
-      DELETE FROM users;
-    `);
-
-    // Create test user
-    const user = await createUser("test@example.com", "password123", "Test User");
+    // Create test user with unique email to avoid conflicts with parallel tests
+    const user = await createUser(`test-p0005-${Date.now()}@example.com`, "password123", "Test User");
     userId = user.id.toString();
 
     // Create test category
@@ -39,12 +29,11 @@ describe("LearningSample & StyleProfile Models (packet-0005)", () => {
 
   afterEach(() => {
     const db = getDb();
-    db.exec(`
-      DELETE FROM learning_samples;
-      DELETE FROM style_profiles;
-      DELETE FROM categories;
-      DELETE FROM users;
-    `);
+    // Delete in FK order: children before parents, scoped to test user
+    db.prepare("DELETE FROM learning_samples WHERE userId = ?").run(userId);
+    db.prepare("DELETE FROM style_profiles WHERE userId = ?").run(userId);
+    db.prepare("DELETE FROM categories WHERE userId = ?").run(userId);
+    db.prepare("DELETE FROM users WHERE id = ?").run(userId);
   });
 
   describe("createLearningSample", () => {

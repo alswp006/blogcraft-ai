@@ -81,7 +81,7 @@ export function getLatestSeoAnalysis(
 ): SeoAnalysis | null {
   return (
     queryOne<SeoAnalysis>(
-      "SELECT * FROM seo_analyses WHERE userId = ? AND postId = ? AND versionId = ? ORDER BY createdAt DESC LIMIT 1",
+      "SELECT * FROM seo_analyses WHERE userId = ? AND postId = ? AND versionId = ? ORDER BY createdAt DESC, rowid DESC LIMIT 1",
       userId,
       postId,
       versionId,

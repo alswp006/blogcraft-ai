@@ -13,17 +13,8 @@ describe("MonetizationTip Model (packet-0009)", () => {
   let categoryId: string;
 
   beforeEach(async () => {
-    const db = getDb();
-
-    // Clear test data
-    db.exec(`
-      DELETE FROM monetization_tips;
-      DELETE FROM categories;
-      DELETE FROM users;
-    `);
-
-    // Create test user
-    const user = await createUser("test@example.com", "password123", "Test User");
+    // Create test user with unique email to avoid conflicts with parallel tests
+    const user = await createUser(`test-p0009-${Date.now()}@example.com`, "password123", "Test User");
     userId = user.id.toString();
 
     // Create test category
@@ -33,11 +24,10 @@ describe("MonetizationTip Model (packet-0009)", () => {
 
   afterEach(() => {
     const db = getDb();
-    db.exec(`
-      DELETE FROM monetization_tips;
-      DELETE FROM categories;
-      DELETE FROM users;
-    `);
+    // Delete in FK order: children before parents, scoped to test user
+    db.prepare("DELETE FROM monetization_tips WHERE userId = ?").run(userId);
+    db.prepare("DELETE FROM categories WHERE userId = ?").run(userId);
+    db.prepare("DELETE FROM users WHERE id = ?").run(userId);
   });
 
   describe("getMonetizationTip", () => {
@@ -210,7 +200,7 @@ describe("MonetizationTip Model (packet-0009)", () => {
     });
 
     it("maintains separate tips for different users", async () => {
-      const user2 = await createUser("test2@example.com", "password123", "Test User 2");
+      const user2 = await createUser(`test-p0009-user2-${Date.now()}@example.com`, "password123", "Test User 2");
       const userId2 = user2.id.toString();
 
       const tip1 = upsertMonetizationTip(userId, categoryId, {
@@ -232,7 +222,11 @@ describe("MonetizationTip Model (packet-0009)", () => {
       const countResult = db
         .prepare("SELECT COUNT(*) as count FROM monetization_tips")
         .get() as { count: number };
-      expect(countResult.count).toBe(2);
+      expect(countResult.count).toBeGreaterThanOrEqual(2);
+
+      // Cleanup user2
+      db.prepare("DELETE FROM monetization_tips WHERE userId = ?").run(userId2);
+      db.prepare("DELETE FROM users WHERE id = ?").run(userId2);
     });
   });
 });

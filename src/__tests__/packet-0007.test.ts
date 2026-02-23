@@ -8,28 +8,17 @@ import { createPost } from "@/lib/models/post";
 
 let testUserId: string;
 let testPostId: string;
+let testCategoryId: string;
 
 beforeEach(async () => {
-  const db = getDb();
-  // Clear test data
-  db.exec(`
-    DELETE FROM crawl_summaries;
-    DELETE FROM crawl_sources;
-    DELETE FROM posts;
-    DELETE FROM categories;
-    DELETE FROM users;
-  `);
-
-  // Create test user
-  const user = await createUser("test@example.com", "password123", "Test User");
+  const user = await createUser(`test-p0007-${Date.now()}@example.com`, "password123", "Test User");
   testUserId = user.id.toString();
 
-  // Create test category
   const category = createCategory(testUserId, { name: "Test Category" });
+  testCategoryId = category.id;
 
-  // Create test post
   const post = createPost(testUserId, {
-    categoryId: category.id,
+    categoryId: testCategoryId,
     locationName: "Test Location",
     overallNote: "Test Note",
   });
@@ -38,13 +27,11 @@ beforeEach(async () => {
 
 afterEach(() => {
   const db = getDb();
-  db.exec(`
-    DELETE FROM crawl_summaries;
-    DELETE FROM crawl_sources;
-    DELETE FROM posts;
-    DELETE FROM categories;
-    DELETE FROM users;
-  `);
+  db.prepare("DELETE FROM crawl_summaries WHERE userId = ?").run(testUserId);
+  db.prepare("DELETE FROM crawl_sources WHERE userId = ?").run(testUserId);
+  db.prepare("DELETE FROM posts WHERE userId = ?").run(testUserId);
+  db.prepare("DELETE FROM categories WHERE userId = ?").run(testUserId);
+  db.prepare("DELETE FROM users WHERE id = ?").run(testUserId);
 });
 
 describe("CrawlSource Model", () => {
@@ -154,6 +141,12 @@ describe("CrawlSummary Model", () => {
   });
 
   it("getCrawlSummaryByPost returns the row after upsert", () => {
+    upsertCrawlSummary(testUserId, testPostId, {
+      totalCount: 15,
+      averageRating: 4.1,
+      summaryText: "This is a summary of all crawled sources.",
+    });
+
     const fetched = getCrawlSummaryByPost(testUserId, testPostId);
 
     expect(fetched).not.toBeNull();
@@ -167,6 +160,12 @@ describe("CrawlSummary Model", () => {
   });
 
   it("upsertCrawlSummary updates existing row when called twice", () => {
+    upsertCrawlSummary(testUserId, testPostId, {
+      totalCount: 15,
+      averageRating: 4.1,
+      summaryText: "This is a summary of all crawled sources.",
+    });
+
     const firstId = getCrawlSummaryByPost(testUserId, testPostId)!.id;
 
     const updated = upsertCrawlSummary(testUserId, testPostId, {
@@ -195,34 +194,18 @@ describe("CrawlSummary Model", () => {
   });
 
   it("upsertCrawlSummary allows null averageRating", () => {
-    // Create a new post for this test
-    const db = getDb();
-    const newPostId = "test-post-null-rating";
-    db.prepare(
-      "INSERT INTO posts (id, userId, categoryId, locationName, overallNote, title, contentMarkdown, status, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-    ).run(
-      newPostId,
-      testUserId,
-      "test-category-1",
-      "Location 2",
-      "Note 2",
-      "Title 2",
-      "Content 2",
-      "draft",
-      Date.now(),
-      Date.now(),
-    );
+    const newPost = createPost(testUserId, {
+      categoryId: testCategoryId,
+      locationName: "Location 2",
+      overallNote: "Note 2",
+    });
 
-    const summary = upsertCrawlSummary(testUserId, newPostId, {
+    const summary = upsertCrawlSummary(testUserId, newPost.id, {
       totalCount: 5,
       summaryText: "Summary without rating.",
     });
 
     expect(summary.averageRating).toBeNull();
     expect(summary.totalCount).toBe(5);
-
-    // Cleanup
-    db.prepare("DELETE FROM crawl_summaries WHERE postId = ?").run(newPostId);
-    db.prepare("DELETE FROM posts WHERE id = ?").run(newPostId);
   });
 });

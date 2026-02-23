@@ -66,7 +66,7 @@ export function getLatestPlagiarismCheck(
 ): PlagiarismCheck | null {
   return (
     queryOne<PlagiarismCheck>(
-      "SELECT * FROM plagiarism_checks WHERE userId = ? AND postId = ? AND versionId = ? ORDER BY createdAt DESC LIMIT 1",
+      "SELECT * FROM plagiarism_checks WHERE userId = ? AND postId = ? AND versionId = ? ORDER BY createdAt DESC, rowid DESC LIMIT 1",
       userId,
       postId,
       versionId,
