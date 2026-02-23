@@ -1,2 +1,5 @@
+🇺🇸 [한국어](./README.ko.md)
+
 # blogcraft-ai
-사진과 메모로 내 말투를 학습한 AI가 10분 만에 자연스러운 블로그 글을 만들고, 검색 상위 노출과 수익화까지 돕는 가족 전용 도구
+
+An AI-powered family tool that learns your voice from photos and notes, writes natural blog posts in 10 minutes, and helps with search optimization and monetization.
