@@ -46,12 +46,15 @@ body {
   color: var(--text);
 }
 
-a {
-  color: var(--accent);
-  text-decoration: none;
-}
-a:hover {
-  text-decoration: underline;
+/* Base styles in @layer so Tailwind utilities (text-white etc.) can override */
+@layer base {
+  a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
 }
 
 /* Scrollbar */
