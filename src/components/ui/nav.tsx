@@ -9,6 +9,7 @@ export function Nav() {
   const pathname = usePathname();
   const [user, setUser] = useState<{ id: number; name: string; email: string } | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     fetch("/api/auth/me")
@@ -21,6 +22,12 @@ export function Nav() {
     setMenuOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 8);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
     setUser(null);
@@ -28,48 +35,83 @@ export function Nav() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--bg-elevated)]/80 backdrop-blur-lg">
+    <nav
+      className={`sticky top-0 z-50 border-b transition-all duration-300 ${
+        scrolled
+          ? "border-[var(--border)] bg-[var(--bg)]/90 backdrop-blur-xl shadow-lg shadow-black/20"
+          : "border-transparent bg-[var(--bg)]/60 backdrop-blur-md"
+      }`}
+    >
       <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <Link href="/" className="text-base font-bold no-underline hover:no-underline text-[var(--text)] tracking-tight">
-          BlogCraft AI
+        {/* Logo */}
+        <Link
+          href="/"
+          className="flex items-center gap-2 no-underline hover:no-underline group"
+        >
+          <div className="w-7 h-7 rounded-lg bg-[var(--accent)] flex items-center justify-center shadow-lg shadow-[var(--accent)]/30 group-hover:shadow-[var(--accent)]/50 transition-shadow duration-200">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 20h9" />
+              <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
+            </svg>
+          </div>
+          <span className="text-sm font-bold text-[var(--text)] tracking-tight">
+            BlogCraft <span className="text-[var(--accent)]">AI</span>
+          </span>
         </Link>
 
-        {/* Mobile menu button */}
+        {/* Mobile menu toggle */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden p-2 rounded-lg hover:bg-[var(--bg-card)] transition-colors cursor-pointer"
+          className="md:hidden w-9 h-9 flex items-center justify-center rounded-lg hover:bg-[var(--bg-card)] transition-colors cursor-pointer"
           aria-label="Toggle menu"
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            {menuOpen ? (
-              <>
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </>
-            ) : (
-              <>
-                <line x1="4" y1="6" x2="20" y2="6" />
-                <line x1="4" y1="12" x2="20" y2="12" />
-                <line x1="4" y1="18" x2="20" y2="18" />
-              </>
-            )}
-          </svg>
+          <div className="flex flex-col gap-1.5">
+            <span
+              className={`block h-0.5 w-5 bg-[var(--text-secondary)] rounded-full transition-all duration-300 ${
+                menuOpen ? "rotate-45 translate-y-2" : ""
+              }`}
+            />
+            <span
+              className={`block h-0.5 w-5 bg-[var(--text-secondary)] rounded-full transition-all duration-300 ${
+                menuOpen ? "opacity-0" : ""
+              }`}
+            />
+            <span
+              className={`block h-0.5 w-5 bg-[var(--text-secondary)] rounded-full transition-all duration-300 ${
+                menuOpen ? "-rotate-45 -translate-y-2" : ""
+              }`}
+            />
+          </div>
         </button>
 
         {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-4">
-          <Link href="/pricing" className="text-sm text-[var(--text-secondary)] no-underline hover:text-[var(--text)] transition-colors duration-200">
+        <div className="hidden md:flex items-center gap-1">
+          <Link
+            href="/pricing"
+            className="px-3 py-2 text-sm text-[var(--text-secondary)] no-underline hover:text-[var(--text)] hover:bg-[var(--bg-elevated)] rounded-lg transition-all duration-200"
+          >
             Pricing
           </Link>
           {user ? (
             <>
-              <Link href="/dashboard" className="text-sm text-[var(--text-secondary)] no-underline hover:text-[var(--text)] transition-colors duration-200">
+              <Link
+                href="/dashboard"
+                className="px-3 py-2 text-sm text-[var(--text-secondary)] no-underline hover:text-[var(--text)] hover:bg-[var(--bg-elevated)] rounded-lg transition-all duration-200"
+              >
                 Dashboard
               </Link>
-              <span className="text-sm text-[var(--text-muted)]">{user.email}</span>
+              <div className="w-px h-4 bg-[var(--border)] mx-1" />
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)]">
+                <div className="w-6 h-6 rounded-full bg-[var(--accent)]/20 flex items-center justify-center">
+                  <span className="text-xs font-semibold text-[var(--accent)]">
+                    {(user.name || user.email).charAt(0).toUpperCase()}
+                  </span>
+                </div>
+                <span className="text-xs text-[var(--text-muted)] max-w-[120px] truncate">{user.email}</span>
+              </div>
               <button
                 onClick={handleLogout}
-                className="text-sm px-4 py-2 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-card)] transition-all duration-200 cursor-pointer"
+                className="ml-1 px-3 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--danger)] hover:bg-[var(--danger-soft)] rounded-lg transition-all duration-200 cursor-pointer"
               >
                 Logout
               </button>
@@ -78,15 +120,15 @@ export function Nav() {
             <>
               <Link
                 href="/login"
-                className="text-sm px-4 py-2 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] no-underline hover:bg-[var(--bg-card)] transition-all duration-200"
+                className="px-4 py-2 text-sm text-[var(--text-secondary)] no-underline hover:text-[var(--text)] hover:bg-[var(--bg-elevated)] rounded-lg transition-all duration-200"
               >
                 Login
               </Link>
               <Link
                 href="/signup"
-                className="text-sm px-4 py-2 rounded-xl bg-[var(--accent)] text-white no-underline hover:opacity-90 transition-opacity shadow-lg shadow-[var(--accent)]/25"
+                className="ml-1 px-4 py-2 text-sm font-medium rounded-lg bg-[var(--accent)] text-white no-underline hover:opacity-90 transition-opacity shadow-md shadow-[var(--accent)]/25"
               >
-                Sign Up
+                무료 시작
               </Link>
             </>
           )}
@@ -94,42 +136,52 @@ export function Nav() {
       </div>
 
       {/* Mobile menu */}
-      {menuOpen && (
-        <div className="md:hidden border-t border-[var(--border)] bg-[var(--bg-elevated)] px-4 py-4 space-y-3">
-          <Link href="/pricing" className="block text-sm text-[var(--text-secondary)] no-underline hover:text-[var(--text)] transition-colors py-2">
+      <div
+        className={`md:hidden overflow-hidden transition-all duration-300 ${
+          menuOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="border-t border-[var(--border)] bg-[var(--bg-elevated)] px-4 py-4 space-y-1">
+          <Link
+            href="/pricing"
+            className="flex items-center px-3 py-2.5 text-sm text-[var(--text-secondary)] no-underline hover:text-[var(--text)] hover:bg-[var(--bg-card)] rounded-lg transition-all duration-200"
+          >
             Pricing
           </Link>
           {user ? (
             <>
-              <Link href="/dashboard" className="block text-sm text-[var(--text-secondary)] no-underline hover:text-[var(--text)] transition-colors py-2">
+              <Link
+                href="/dashboard"
+                className="flex items-center px-3 py-2.5 text-sm text-[var(--text-secondary)] no-underline hover:text-[var(--text)] hover:bg-[var(--bg-card)] rounded-lg transition-all duration-200"
+              >
                 Dashboard
               </Link>
-              <div className="text-sm text-[var(--text-muted)] py-2">{user.email}</div>
+              <div className="px-3 py-2 text-xs text-[var(--text-muted)] truncate">{user.email}</div>
               <button
                 onClick={handleLogout}
-                className="w-full text-sm px-4 py-2.5 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-card)] transition-all duration-200 cursor-pointer text-left"
+                className="w-full flex items-center px-3 py-2.5 text-sm text-[var(--danger)] hover:bg-[var(--danger-soft)] rounded-lg transition-all duration-200 cursor-pointer"
               >
                 Logout
               </button>
             </>
           ) : (
-            <div className="flex gap-3 pt-2">
+            <div className="flex gap-2 pt-2">
               <Link
                 href="/login"
-                className="flex-1 text-center text-sm px-4 py-2.5 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] no-underline hover:bg-[var(--bg-card)] transition-all duration-200"
+                className="flex-1 text-center text-sm px-4 py-2.5 rounded-lg border border-[var(--border)] text-[var(--text-secondary)] no-underline hover:bg-[var(--bg-card)] transition-all duration-200"
               >
                 Login
               </Link>
               <Link
                 href="/signup"
-                className="flex-1 text-center text-sm px-4 py-2.5 rounded-xl bg-[var(--accent)] text-white no-underline hover:opacity-90 transition-opacity shadow-lg shadow-[var(--accent)]/25"
+                className="flex-1 text-center text-sm font-medium px-4 py-2.5 rounded-lg bg-[var(--accent)] text-white no-underline hover:opacity-90 transition-opacity shadow-md shadow-[var(--accent)]/25"
               >
-                Sign Up
+                무료 시작
               </Link>
             </div>
           )}
         </div>
-      )}
+      </div>
     </nav>
   );
 }

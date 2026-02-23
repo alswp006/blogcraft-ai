@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 export type Plan = {
   name: string;
@@ -38,78 +39,118 @@ export function PricingSection({ plans }: PricingSectionProps) {
     }
   };
 
+  const isFree = (price: string) => price === "₩0" || price === "Free" || price === "무료";
+  const isCustom = (price: string) => price === "맞춤" || price === "Custom";
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
       {plans.map((plan) => (
         <div
           key={plan.name}
-          className={`rounded-2xl border bg-[var(--bg-card)] p-6 md:p-8 flex flex-col hover:shadow-lg transition-all duration-300 ${
+          className={`relative rounded-2xl flex flex-col transition-all duration-300 ${
             plan.highlighted
-              ? "border-[var(--accent)] ring-2 ring-[var(--accent)]/20 shadow-lg shadow-[var(--accent)]/10"
-              : "border-[var(--border)] hover:border-[var(--accent)]/30"
+              ? "border-2 border-[var(--accent)] bg-[var(--bg-card)] shadow-2xl shadow-[var(--accent)]/15 hover:shadow-[var(--accent)]/25"
+              : "border border-[var(--border)] bg-[var(--bg-card)] hover:border-[var(--accent)]/30 hover:shadow-xl hover:shadow-black/20"
           }`}
         >
           {plan.highlighted && (
-            <div className="text-xs font-semibold text-[var(--accent)] uppercase tracking-wider mb-4">
-              Most Popular
+            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+              <span className="px-4 py-1 text-xs font-semibold rounded-full bg-[var(--accent)] text-white shadow-lg shadow-[var(--accent)]/30">
+                Most Popular
+              </span>
             </div>
           )}
-          <h3 className="text-lg font-semibold text-[var(--text)]">
-            {plan.name}
-          </h3>
-          <div className="mt-3">
-            <span className="text-3xl font-bold text-[var(--text)]">
-              {plan.price}
-            </span>
-            {plan.price !== "Free" && plan.price !== "Custom" && (
-              <span className="text-sm text-[var(--text-muted)] ml-1">/month</span>
-            )}
-          </div>
-          {plan.description && (
-            <p className="mt-3 text-sm text-[var(--text-secondary)] leading-relaxed">
-              {plan.description}
-            </p>
-          )}
-          <ul className="mt-6 space-y-3 flex-1">
-            {plan.features.map((feature) => (
-              <li
-                key={feature}
-                className="text-sm text-[var(--text-secondary)] flex items-start gap-3"
-              >
-                <span className="text-[var(--success)] mt-0.5 shrink-0">&#10003;</span>
-                {feature}
-              </li>
-            ))}
-          </ul>
-          <div className="mt-8">
-            {!stripeEnabled ? (
-              <span className="block text-center text-sm text-[var(--text-muted)] py-3 rounded-xl border border-[var(--border)]">
-                Coming Soon
-              </span>
-            ) : plan.price === "Free" ? (
-              <span className="block text-center text-sm text-[var(--text-muted)] py-3 rounded-xl border border-[var(--border)]">
-                Current Plan
-              </span>
-            ) : plan.price === "Custom" ? (
-              <a
-                href="mailto:sales@example.com"
-                className="block text-center text-sm px-6 py-3 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] font-medium no-underline hover:bg-[var(--bg-card)] transition-all duration-200"
-              >
-                Contact Sales
-              </a>
-            ) : (
-              <button
-                onClick={() => handleCheckout(plan.priceId)}
-                disabled={loading === plan.priceId}
-                className={`w-full text-sm px-6 py-3 rounded-xl font-medium transition-all duration-200 cursor-pointer ${
-                  plan.highlighted
-                    ? "bg-[var(--accent)] text-white hover:opacity-90 shadow-lg shadow-[var(--accent)]/25"
-                    : "border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-card)]"
-                } disabled:opacity-50 disabled:cursor-not-allowed`}
-              >
-                {loading === plan.priceId ? "Redirecting..." : "Get Started"}
-              </button>
-            )}
+
+          <div className={`p-6 md:p-8 flex flex-col flex-1 ${plan.highlighted ? "pt-10" : ""}`}>
+            <div className="space-y-1 mb-5">
+              <h3 className="text-base font-semibold text-[var(--text)]">{plan.name}</h3>
+              {plan.description && (
+                <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+                  {plan.description}
+                </p>
+              )}
+            </div>
+
+            <div className="mb-6">
+              <div className="flex items-end gap-1">
+                <span className={`text-3xl font-bold ${plan.highlighted ? "text-[var(--accent)]" : "text-[var(--text)]"}`}>
+                  {plan.price}
+                </span>
+                {!isFree(plan.price) && !isCustom(plan.price) && (
+                  <span className="text-sm text-[var(--text-muted)] mb-1">/월</span>
+                )}
+              </div>
+            </div>
+
+            <ul className="space-y-2.5 flex-1 mb-8">
+              {plan.features.map((feature) => (
+                <li key={feature} className="flex items-start gap-2.5">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className={`mt-0.5 shrink-0 ${plan.highlighted ? "text-[var(--accent)]" : "text-[var(--success)]"}`}
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <span className="text-sm text-[var(--text-secondary)]">{feature}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div>
+              {!stripeEnabled ? (
+                <Link
+                  href="/signup"
+                  className={`block text-center text-sm font-semibold px-6 py-3 rounded-xl no-underline transition-all duration-200 ${
+                    plan.highlighted
+                      ? "bg-[var(--accent)] text-white hover:opacity-90 shadow-lg shadow-[var(--accent)]/25"
+                      : "border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-elevated)] hover:text-[var(--text)]"
+                  }`}
+                >
+                  {isFree(plan.price) ? "무료로 시작하기" : isCustom(plan.price) ? "영업팀 문의" : "시작하기"}
+                </Link>
+              ) : isFree(plan.price) ? (
+                <Link
+                  href="/signup"
+                  className="block text-center text-sm font-medium px-6 py-3 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] no-underline hover:bg-[var(--bg-elevated)] hover:text-[var(--text)] transition-all duration-200"
+                >
+                  무료로 시작하기
+                </Link>
+              ) : isCustom(plan.price) ? (
+                <a
+                  href="mailto:sales@blogcraft.ai"
+                  className="block text-center text-sm font-medium px-6 py-3 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] no-underline hover:bg-[var(--bg-elevated)] hover:text-[var(--text)] transition-all duration-200"
+                >
+                  영업팀 문의
+                </a>
+              ) : (
+                <button
+                  onClick={() => handleCheckout(plan.priceId)}
+                  disabled={loading === plan.priceId}
+                  className={`w-full text-sm font-semibold px-6 py-3 rounded-xl transition-all duration-200 cursor-pointer ${
+                    plan.highlighted
+                      ? "bg-[var(--accent)] text-white hover:opacity-90 shadow-lg shadow-[var(--accent)]/25"
+                      : "border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-elevated)] hover:text-[var(--text)]"
+                  } disabled:opacity-50 disabled:cursor-not-allowed`}
+                >
+                  {loading === plan.priceId ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <svg className="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      이동 중...
+                    </span>
+                  ) : "시작하기"}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       ))}

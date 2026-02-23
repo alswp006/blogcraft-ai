@@ -10,27 +10,42 @@ interface CtaSectionProps {
 export function CtaSection({
   heading,
   description,
-  ctaText = "Get Started Free",
+  ctaText = "무료로 시작하기",
   ctaHref = "/signup",
 }: CtaSectionProps) {
   return (
-    <section className="w-full py-20">
+    <section className="w-full py-20 md:py-28">
       <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
-        <div className="rounded-2xl bg-gradient-to-r from-[var(--accent)]/10 to-purple-500/10 p-10 md:p-8 text-center space-y-4">
-          <h2 className="text-2xl font-semibold tracking-tight text-[var(--text)]">{heading}</h2>
-          {description && (
-            <p className="text-base leading-relaxed text-[var(--text-secondary)] max-w-md mx-auto">
-              {description}
-            </p>
-          )}
-          <div className="pt-2">
+        <div className="relative rounded-2xl overflow-hidden p-10 md:p-16 text-center space-y-6">
+          {/* Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent)]/12 via-purple-600/8 to-[var(--accent)]/5" />
+          <div className="absolute inset-0 border border-[var(--accent)]/15 rounded-2xl" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-[var(--accent)]/10 blur-3xl rounded-full" />
+
+          <div className="relative space-y-4">
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-[var(--text)]">
+              {heading}
+            </h2>
+            {description && (
+              <p className="text-base leading-relaxed text-[var(--text-secondary)] max-w-lg mx-auto">
+                {description}
+              </p>
+            )}
+          </div>
+          <div className="relative flex flex-col sm:flex-row gap-3 justify-center pt-2">
             <Link
               href={ctaHref}
-              className="inline-block px-6 py-3 rounded-xl bg-[var(--accent)] text-white font-medium text-sm no-underline hover:opacity-90 transition-opacity shadow-lg shadow-[var(--accent)]/25"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-[var(--accent)] text-white font-semibold text-sm no-underline hover:opacity-90 transition-all duration-200 shadow-xl shadow-[var(--accent)]/30 hover:-translate-y-0.5"
             >
               {ctaText}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
             </Link>
           </div>
+          <p className="relative text-xs text-[var(--text-muted)]">
+            신용카드 없이 무료로 시작 · 언제든지 취소 가능
+          </p>
         </div>
       </div>
     </section>

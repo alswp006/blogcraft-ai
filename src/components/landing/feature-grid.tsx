@@ -12,12 +12,14 @@ interface FeatureGridProps {
 
 export function FeatureGrid({ heading, subheading, features }: FeatureGridProps) {
   return (
-    <section className="w-full py-20 md:py-28">
+    <section className="w-full py-20 md:py-28 bg-[var(--bg-elevated)]/40">
       <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 space-y-12">
         {(heading || subheading) && (
           <div className="text-center space-y-3">
             {heading && (
-              <h2 className="text-2xl font-semibold tracking-tight text-[var(--text)]">{heading}</h2>
+              <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-[var(--text)]">
+                {heading}
+              </h2>
             )}
             {subheading && (
               <p className="text-base leading-relaxed text-[var(--text-secondary)] max-w-lg mx-auto">
@@ -26,19 +28,19 @@ export function FeatureGrid({ heading, subheading, features }: FeatureGridProps)
             )}
           </div>
         )}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
           {features.map((feature) => (
             <div
               key={feature.title}
-              className="rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] p-6 md:p-8 space-y-4 hover:shadow-lg hover:border-[var(--accent)]/30 transition-all duration-300"
+              className="group rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] p-6 md:p-8 space-y-4 hover:shadow-xl hover:shadow-black/20 hover:border-[var(--accent)]/25 hover:-translate-y-1 transition-all duration-300 cursor-default"
             >
-              <div className="rounded-xl w-12 h-12 flex items-center justify-center bg-[var(--accent)]/10 text-xl mb-4">
+              <div className="rounded-xl w-12 h-12 flex items-center justify-center bg-[var(--accent)]/10 text-xl group-hover:bg-[var(--accent)]/15 transition-colors duration-300">
                 {feature.icon}
               </div>
               <h3 className="text-lg font-semibold text-[var(--text)]">
                 {feature.title}
               </h3>
-              <p className="text-base leading-relaxed text-[var(--text-secondary)]">
+              <p className="text-sm leading-relaxed text-[var(--text-secondary)]">
                 {feature.description}
               </p>
             </div>
