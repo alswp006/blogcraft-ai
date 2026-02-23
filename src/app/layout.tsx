@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AdProvider>
           <AnalyticsProvider>
             <Nav />
-            <main className="max-w-5xl mx-auto px-4 py-8">
+            <main>
               {children}
             </main>
           </AnalyticsProvider>

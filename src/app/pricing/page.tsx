@@ -42,7 +42,7 @@ const plans: Plan[] = [
 
 export default function PricingPage() {
   return (
-    <div className="space-y-10">
+    <div className="max-w-5xl mx-auto px-4 md:px-6 lg:px-8 py-8 space-y-10">
       <div className="text-center space-y-3">
         <h1 className="text-2xl font-bold text-[var(--text)]">Pricing</h1>
         <p className="text-sm text-[var(--text-secondary)]">

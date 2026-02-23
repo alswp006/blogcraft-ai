@@ -39,30 +39,32 @@ export function Footer({ columns, copyright }: FooterProps) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-[var(--border)] mt-16 py-10">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
-        {cols.map((col) => (
-          <div key={col.title} className="space-y-3">
-            <h4 className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider">
-              {col.title}
-            </h4>
-            <ul className="space-y-2">
-              {col.links.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-[var(--text-secondary)] no-underline hover:text-[var(--text)] transition-all duration-150"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-      <div className="text-xs text-[var(--text-muted)]">
-        {copyright || `\u00A9 ${year} ${siteName}. All rights reserved.`}
+    <footer className="w-full border-t border-[var(--border)] py-12">
+      <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+          {cols.map((col) => (
+            <div key={col.title} className="space-y-3">
+              <h4 className="text-sm font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-3">
+                {col.title}
+              </h4>
+              <ul className="space-y-2">
+                {col.links.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-[var(--text-muted)] no-underline hover:text-[var(--text)] transition-colors duration-200"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <div className="text-xs text-[var(--text-muted)]">
+          {copyright || `\u00A9 ${year} ${siteName}. All rights reserved.`}
+        </div>
       </div>
     </footer>
   );

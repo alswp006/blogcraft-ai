@@ -2,14 +2,27 @@ import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { getUserById } from "@/lib/models/user";
+import { getDb, queryOne, execute } from "@/lib/db";
 import type { SafeUser } from "@/lib/models/user";
 
 const SESSION_COOKIE = "session_token";
 const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 
-// In-memory session store (resets on server restart — fine for MVP)
-// For production: use DB-backed sessions
-const sessions = new Map<string, { userId: number; expiresAt: number }>();
+// Ensure sessions table exists (idempotent, called lazily)
+let _sessionsTableReady = false;
+function ensureSessionsTable(): void {
+  if (_sessionsTableReady) return;
+  const db = getDb();
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS sessions (
+      token TEXT PRIMARY KEY,
+      userId INTEGER NOT NULL,
+      expiresAt INTEGER NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_sessions_userId ON sessions(userId);
+  `);
+  _sessionsTableReady = true;
+}
 
 // ── Password hashing ──
 
@@ -21,13 +34,38 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
   return bcrypt.compare(password, hash);
 }
 
-// ── Session management ──
+// ── Session management (DB-backed) ──
 
-export async function createSession(userId: number): Promise<string> {
+/** Create a session token and store it in DB (no cookie — for tests and internal use) */
+export function createSessionToken(userId: number): string {
+  ensureSessionsTable();
   const token = crypto.randomBytes(32).toString("hex");
   const expiresAt = Date.now() + SESSION_MAX_AGE * 1000;
+  execute(
+    "INSERT INTO sessions (token, userId, expiresAt) VALUES (?, ?, ?)",
+    token, userId, expiresAt,
+  );
+  return token;
+}
 
-  sessions.set(token, { userId, expiresAt });
+/** Get userId from session token (for API routes that parse cookies manually) */
+export function getSessionUserId(token: string): number | null {
+  ensureSessionsTable();
+  const session = queryOne<{ userId: number; expiresAt: number }>(
+    "SELECT userId, expiresAt FROM sessions WHERE token = ?",
+    token,
+  );
+  if (!session) return null;
+  if (session.expiresAt < Date.now()) {
+    execute("DELETE FROM sessions WHERE token = ?", token);
+    return null;
+  }
+  return session.userId;
+}
+
+/** Create a session and set the cookie (for route handlers) */
+export async function createSession(userId: number): Promise<string> {
+  const token = createSessionToken(userId);
 
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE, token, {
@@ -42,10 +80,11 @@ export async function createSession(userId: number): Promise<string> {
 }
 
 export async function destroySession(): Promise<void> {
+  ensureSessionsTable();
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE)?.value;
   if (token) {
-    sessions.delete(token);
+    execute("DELETE FROM sessions WHERE token = ?", token);
     cookieStore.delete(SESSION_COOKIE);
   }
 }
@@ -55,16 +94,10 @@ export async function getCurrentUser(): Promise<SafeUser | null> {
   const token = cookieStore.get(SESSION_COOKIE)?.value;
   if (!token) return null;
 
-  const session = sessions.get(token);
-  if (!session) return null;
+  const userId = getSessionUserId(token);
+  if (!userId) return null;
 
-  // Check expiry
-  if (session.expiresAt < Date.now()) {
-    sessions.delete(token);
-    return null;
-  }
-
-  return getUserById(session.userId);
+  return getUserById(userId);
 }
 
 /** Get session token from request headers (for middleware) */
@@ -78,11 +111,6 @@ export function getSessionTokenFromHeaders(headers: Headers): string | null {
 
 /** Validate a session token (for middleware — no cookie store needed) */
 export function validateSessionToken(token: string): boolean {
-  const session = sessions.get(token);
-  if (!session) return false;
-  if (session.expiresAt < Date.now()) {
-    sessions.delete(token);
-    return false;
-  }
-  return true;
+  const userId = getSessionUserId(token);
+  return userId !== null;
 }
