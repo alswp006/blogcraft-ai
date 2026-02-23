@@ -40,5 +40,16 @@ a:hover { text-decoration: underline; }
 .card {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+}
+.card:hover {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+/* Hero subtle grid background */
+.hero-grid-bg {
+  background-image: radial-gradient(circle at 1px 1px, rgba(99, 102, 241, 0.08) 1px, transparent 0);
+  background-size: 32px 32px;
 }
