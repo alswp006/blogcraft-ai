@@ -95,22 +95,22 @@ export default function PricingPage() {
       </section>
 
       {/* FAQ */}
-      <section className="w-full py-20 bg-[var(--bg-elevated)]/40">
-        <div className="max-w-3xl mx-auto px-4 md:px-6 lg:px-8 space-y-10">
+      <section className="w-full py-20 md:py-28 bg-[var(--bg-elevated)]/40">
+        <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 space-y-12">
           <div className="text-center space-y-3">
-            <h2 className="text-2xl font-semibold tracking-tight text-[var(--text)]">자주 묻는 질문</h2>
+            <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-[var(--text)]">자주 묻는 질문</h2>
           </div>
-          <div className="space-y-4">
+          <div className="max-w-3xl mx-auto space-y-5">
             {faq.map((item) => (
-              <div key={item.q} className="rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] p-6 hover:border-[var(--border-hover)] transition-colors duration-200">
-                <h3 className="text-sm font-semibold text-[var(--text)] mb-2">{item.q}</h3>
+              <div key={item.q} className="rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] p-6 md:p-8 hover:border-[var(--border-hover)] transition-colors duration-200">
+                <h3 className="text-base font-semibold text-[var(--text)] mb-3">{item.q}</h3>
                 <p className="text-sm leading-relaxed text-[var(--text-secondary)]">{item.a}</p>
               </div>
             ))}
           </div>
 
           <div className="text-center pt-4">
-            <p className="text-sm text-[var(--text-muted)] mb-4">
+            <p className="text-sm text-[var(--text-muted)] mb-6">
               더 궁금한 점이 있으신가요?
             </p>
             <Link

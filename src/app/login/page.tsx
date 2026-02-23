@@ -54,7 +54,7 @@ function LoginForm() {
     <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md space-y-8">
         {/* Brand */}
-        <div className="text-center space-y-1">
+        <div className="text-center space-y-2">
           <Link href="/" className="inline-flex items-center gap-2 no-underline hover:no-underline mb-6 group">
             <div className="w-8 h-8 rounded-xl bg-[var(--accent)] flex items-center justify-center shadow-lg shadow-[var(--accent)]/30">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -70,7 +70,7 @@ function LoginForm() {
           <p className="text-sm text-[var(--text-secondary)]">계정에 로그인하세요</p>
         </div>
 
-        <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] p-8 shadow-xl shadow-black/20 space-y-5">
+        <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] p-8 shadow-xl shadow-black/20 space-y-6">
           {error && (
             <div className="flex items-center gap-3 text-sm px-4 py-3 rounded-xl bg-[var(--danger-soft)] text-[var(--danger)] border border-[var(--danger)]/20">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
@@ -82,8 +82,8 @@ function LoginForm() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-1.5">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="space-y-2">
               <label className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">이메일</label>
               <input
                 type="email"
@@ -96,7 +96,7 @@ function LoginForm() {
               />
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <label className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">비밀번호</label>
               <input
                 type="password"
@@ -112,7 +112,7 @@ function LoginForm() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 text-sm font-semibold rounded-xl bg-[var(--accent)] text-white hover:opacity-90 disabled:opacity-50 transition-all duration-200 cursor-pointer shadow-lg shadow-[var(--accent)]/25 disabled:cursor-not-allowed mt-2"
+              className="w-full py-3 text-sm font-semibold rounded-xl bg-[var(--accent)] text-white hover:opacity-90 disabled:opacity-50 transition-all duration-200 cursor-pointer shadow-lg shadow-[var(--accent)]/25 disabled:cursor-not-allowed mt-3"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">

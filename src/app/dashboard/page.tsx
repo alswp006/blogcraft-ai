@@ -69,11 +69,11 @@ export default async function DashboardPage() {
   ];
 
   return (
-    <section className="w-full py-10 md:py-16">
-      <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 space-y-8">
+    <section className="w-full py-12 md:py-20">
+      <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 space-y-10">
         {/* Header */}
         <div className="flex items-start justify-between">
-          <div className="space-y-1">
+          <div className="space-y-2">
             <h1 className="text-3xl font-bold tracking-tight text-[var(--text)]">대시보드</h1>
             <p className="text-sm text-[var(--text-secondary)]">
               돌아오셨군요, <span className="text-[var(--text)] font-medium">{user.name || user.email}</span>님
@@ -95,13 +95,13 @@ export default async function DashboardPage() {
           {statCards.map((stat) => (
             <div
               key={stat.label}
-              className="rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] p-5 hover:border-[var(--border-hover)] hover:shadow-lg hover:shadow-black/10 transition-all duration-300"
+              className="rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] p-6 hover:border-[var(--border-hover)] hover:shadow-lg hover:shadow-black/10 transition-all duration-300"
             >
-              <div className={`w-8 h-8 rounded-lg ${stat.iconBg} ${stat.color} flex items-center justify-center mb-3`}>
+              <div className={`w-8 h-8 rounded-lg ${stat.iconBg} ${stat.color} flex items-center justify-center mb-4`}>
                 {stat.icon}
               </div>
               <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
-              <p className="text-xs text-[var(--text-muted)] mt-0.5">{stat.label}</p>
+              <p className="text-xs text-[var(--text-muted)] mt-1.5">{stat.label}</p>
             </div>
           ))}
         </div>
@@ -119,16 +119,16 @@ export default async function DashboardPage() {
               <p className="text-sm text-[var(--text-muted)]">{user.email}</p>
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-[var(--border)]">
-            <div className="space-y-0.5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-[var(--border)]">
+            <div className="space-y-1.5">
               <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider">이메일</p>
               <p className="text-sm text-[var(--text)]">{user.email}</p>
             </div>
-            <div className="space-y-0.5">
+            <div className="space-y-1.5">
               <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider">이름</p>
               <p className="text-sm text-[var(--text)]">{user.name || "미설정"}</p>
             </div>
-            <div className="space-y-0.5">
+            <div className="space-y-1.5">
               <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider">가입일</p>
               <p className="text-sm text-[var(--text)]">{joinDate}</p>
             </div>
@@ -136,14 +136,14 @@ export default async function DashboardPage() {
         </div>
 
         {/* Empty State — Blog Posts */}
-        <div className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--bg-card)]/30 py-20 text-center space-y-4">
+        <div className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--bg-card)]/30 py-20 text-center space-y-6">
           <div className="w-16 h-16 rounded-2xl bg-[var(--accent)]/10 flex items-center justify-center mx-auto">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--accent)]">
               <path d="M12 20h9" />
               <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
             </svg>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-3">
             <h3 className="text-xl font-semibold text-[var(--text)]">아직 게시물이 없습니다</h3>
             <p className="text-sm text-[var(--text-secondary)] max-w-sm mx-auto leading-relaxed">
               사진과 메모를 업로드하고 AI와 함께 첫 번째 블로그 글을 작성해보세요.

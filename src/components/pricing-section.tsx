@@ -62,8 +62,8 @@ export function PricingSection({ plans }: PricingSectionProps) {
           )}
 
           <div className={`p-6 md:p-8 flex flex-col flex-1 ${plan.highlighted ? "pt-10" : ""}`}>
-            <div className="space-y-1 mb-5">
-              <h3 className="text-base font-semibold text-[var(--text)]">{plan.name}</h3>
+            <div className="space-y-2 mb-6">
+              <h3 className="text-lg font-semibold text-[var(--text)]">{plan.name}</h3>
               {plan.description && (
                 <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
                   {plan.description}
@@ -71,8 +71,8 @@ export function PricingSection({ plans }: PricingSectionProps) {
               )}
             </div>
 
-            <div className="mb-6">
-              <div className="flex items-end gap-1">
+            <div className="mb-8">
+              <div className="flex items-end gap-1.5">
                 <span className={`text-3xl font-bold ${plan.highlighted ? "text-[var(--accent)]" : "text-[var(--text)]"}`}>
                   {plan.price}
                 </span>
@@ -82,7 +82,7 @@ export function PricingSection({ plans }: PricingSectionProps) {
               </div>
             </div>
 
-            <ul className="space-y-2.5 flex-1 mb-8">
+            <ul className="space-y-3 flex-1 mb-8">
               {plan.features.map((feature) => (
                 <li key={feature} className="flex items-start gap-2.5">
                   <svg

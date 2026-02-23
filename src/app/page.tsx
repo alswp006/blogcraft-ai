@@ -34,7 +34,7 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-[var(--border)]">
             {stats.map((stat) => (
-              <div key={stat.label} className="px-6 py-8 text-center space-y-1">
+              <div key={stat.label} className="px-6 py-8 text-center space-y-2">
                 <p className="text-3xl font-bold text-[var(--text)]">{stat.value}</p>
                 <p className="text-sm text-[var(--text-muted)]">{stat.label}</p>
               </div>

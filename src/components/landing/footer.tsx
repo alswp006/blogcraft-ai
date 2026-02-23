@@ -78,11 +78,11 @@ export function Footer({ columns, copyright }: FooterProps) {
           {/* Link columns */}
           <div className="md:col-span-4 grid grid-cols-2 md:grid-cols-4 gap-8">
             {cols.map((col) => (
-              <div key={col.title} className="space-y-3">
+              <div key={col.title} className="space-y-4">
                 <h4 className="text-xs font-semibold text-[var(--text)] uppercase tracking-wider">
                   {col.title}
                 </h4>
-                <ul className="space-y-2.5">
+                <ul className="space-y-3">
                   {col.links.map((link) => (
                     <li key={link.href}>
                       <Link
