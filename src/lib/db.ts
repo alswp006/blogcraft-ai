@@ -1,5 +1,6 @@
 import Database from "better-sqlite3";
 import path from "path";
+import { initAppSchema } from "./db/appSchema";
 
 const DB_PATH = path.join(process.cwd(), "app.db");
 
@@ -35,6 +36,9 @@ export function getDb(): Database.Database {
       updated_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
   `);
+
+  // App-specific schema (all SPEC tables, idempotent)
+  initAppSchema(_db);
 
   return _db;
 }
