@@ -1,0 +1,34 @@
+{
+  "id": "0009",
+  "title": "MonetizationTip model (get + upsert)",
+  "epic": "Epic 1. Data Layer",
+  "task": {
+    "description": "Add a `monetization_tips` model to fetch and upsert the single tip per (userId, categoryId). This provides a stable data layer for the monetization feature while relying on DB uniqueness to prevent duplicates.",
+    "acceptance_criteria": [
+      "`getMonetizationTip(userId,categoryId)` returns null when no tip exists; after upsert it returns a row with matching `userId` and `categoryId`.",
+      "`upsertMonetizationTip(...)` called twice for same user+category results in exactly 1 row in `monetization_tips` for that pair (updated values visible).",
+      "Inserting two tips with same (userId,categoryId) via raw insert causes a unique constraint error (DB enforcement present).",
+      "Returned rows include integer `createdAt` and `updatedAt` timestamps in ms.",
+      "`next build` completes successfully."
+    ]
+  },
+  "covers": [
+    "F8-AC1",
+    "F8-AC2"
+  ],
+  "files": [
+    "src/lib/models/monetizationTip.ts"
+  ],
+  "definition_of_done": [
+    "Upsert is implemented via `ON CONFLICT(userId,categoryId) DO UPDATE` and updates `updatedAt` on every write.",
+    "No additional npm dependencies are introduced.",
+    "Build passes with strict TypeScript."
+  ],
+  "depends_on": [
+    "0001"
+  ],
+  "db_schema": "",
+  "api_contract": "",
+  "dependencies": [],
+  "ui_requirements": ""
+}

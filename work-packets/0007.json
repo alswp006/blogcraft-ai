@@ -1,0 +1,34 @@
+{
+  "id": "0007",
+  "title": "CrawlSource + CrawlSummary models",
+  "epic": "Epic 1. Data Layer",
+  "task": {
+    "description": "Add data models for multi-source crawling records and summaries: insert multiple crawl source rows in one call, list sources for a post ordered by `createdAt`, and upsert/fetch a per-post crawl summary keyed by (userId, postId).",
+    "acceptance_criteria": [
+      "`insertCrawlSources(userId,postId,sources)` inserts exactly `sources.length` rows; each row has a UUID id and integer `createdAt`.",
+      "`listCrawlSources(userId,postId)` returns only rows for that user+post and is sorted by `createdAt ASC`.",
+      "`upsertCrawlSummary(userId,postId,{...})` results in exactly 1 row for that user+post; calling it twice updates the existing row (unique enforced).",
+      "`getCrawlSummaryByPost(userId,postId)` returns null when absent and returns the saved row after upsert.",
+      "`next build` completes successfully."
+    ]
+  },
+  "covers": [
+    "F4-AC1"
+  ],
+  "files": [
+    "src/lib/models/crawlSource.ts",
+    "src/lib/models/crawlSummary.ts"
+  ],
+  "definition_of_done": [
+    "All writes are wrapped in a transaction when inserting multiple sources to avoid partial inserts.",
+    "Rating and counts are stored as provided; DB CHECK constraints enforce allowed ranges.",
+    "Build passes with strict TypeScript."
+  ],
+  "depends_on": [
+    "0001"
+  ],
+  "db_schema": "",
+  "api_contract": "",
+  "dependencies": [],
+  "ui_requirements": ""
+}

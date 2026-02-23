@@ -1,0 +1,34 @@
+{
+  "id": "0004",
+  "title": "Category model (create/get/list)",
+  "epic": "Epic 1. Data Layer",
+  "task": {
+    "description": "Create the `categories` model with functions to insert a category, fetch by id (including userId for auth checks), and list categories for a user sorted by `updatedAt DESC`, returning DB-native ms timestamps.",
+    "acceptance_criteria": [
+      "`createCategory(userId,{name,description})` inserts 1 row and returns an object whose `id` is a non-empty string and whose `createdAt`/`updatedAt` are integers (ms).",
+      "Attempting to create two categories with same `userId` and `name` causes a SQLite unique constraint error (callers can map to 409).",
+      "`getCategoryById(categoryId)` returns null when no row exists, otherwise returns a row including matching `id` and `userId`.",
+      "`listCategoriesByUser(userId)` returns only rows with that `userId` and is sorted by `updatedAt` descending.",
+      "`next build` completes successfully."
+    ]
+  },
+  "covers": [
+    "F1-AC1",
+    "F1-AC7"
+  ],
+  "files": [
+    "src/lib/models/category.ts"
+  ],
+  "definition_of_done": [
+    "Uses the shared DB instance from `src/lib/db.ts` and prepared statements where reasonable.",
+    "No timestamp ISO formatting is done here; model stays DB-centric.",
+    "Build passes with strict TypeScript."
+  ],
+  "depends_on": [
+    "0001"
+  ],
+  "db_schema": "",
+  "api_contract": "",
+  "dependencies": [],
+  "ui_requirements": ""
+}

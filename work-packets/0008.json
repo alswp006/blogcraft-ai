@@ -1,0 +1,38 @@
+{
+  "id": "0008",
+  "title": "PostVersion + PlagiarismCheck + SeoAnalysis models",
+  "epic": "Epic 1. Data Layer",
+  "task": {
+    "description": "Implement versioning and analysis models: create a new post version with an auto-incrementing `versionNumber` per post, fetch latest version, and insert plagiarism/SEO analysis rows linked to the version with JSON-serialized fields stored as TEXT.",
+    "acceptance_criteria": [
+      "`createPostVersionNext(userId,postId,...)` creates versionNumber 1 when none exist; after a second call it creates versionNumber 2 (and both rows remain).",
+      "`getLatestPostVersion(userId,postId)` returns null when no versions exist; otherwise returns the row with the highest `versionNumber`.",
+      "`createPlagiarismCheck(...)` stores `comparedSourceIds` as a JSON array string; `JSON.parse(comparedSourceIds)` returns an array of strings.",
+      "`createSeoAnalysis(...)` stores `suggestions` as a JSON array string; `JSON.parse(suggestions)` returns an array of strings.",
+      "Unique(postId,versionNumber) prevents two rows with same versionNumber for the same postId.",
+      "`next build` completes successfully."
+    ]
+  },
+  "covers": [
+    "F6-AC1",
+    "F6-AC2",
+    "F7-AC1"
+  ],
+  "files": [
+    "src/lib/models/postVersion.ts",
+    "src/lib/models/plagiarismCheck.ts",
+    "src/lib/models/seoAnalysis.ts"
+  ],
+  "definition_of_done": [
+    "Version number selection and insert are performed in a transaction to avoid duplicates under concurrent calls.",
+    "All IDs use `crypto.randomUUID()` and timestamps are integer ms.",
+    "Build passes with strict TypeScript."
+  ],
+  "depends_on": [
+    "0001"
+  ],
+  "db_schema": "",
+  "api_contract": "",
+  "dependencies": [],
+  "ui_requirements": ""
+}

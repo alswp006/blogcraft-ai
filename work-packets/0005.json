@@ -1,0 +1,37 @@
+{
+  "id": "0005",
+  "title": "LearningSample + StyleProfile models",
+  "epic": "Epic 1. Data Layer",
+  "task": {
+    "description": "Add models for `learning_samples` and `style_profiles`: insert a learning sample, count samples for a user+category, fetch profile or null, and upsert profile by (userId, categoryId). Models must preserve SPEC constraints and return ms timestamps.",
+    "acceptance_criteria": [
+      "`createLearningSample(...)` inserts 1 row and returns `id`, `sourceType`, `rawText`, and integer `createdAt`; for `sourceType='url'`, returned `sourceUrl` is non-null and `fileName` is null (and vice versa for `file`).",
+      "`countLearningSamplesForCategory(userId,categoryId)` returns 0 for an empty category and increases by 1 after each successful insert.",
+      "`getStyleProfile(userId,categoryId)` returns null when absent; after upsert, it returns a row with matching `userId`/`categoryId`.",
+      "Calling `upsertStyleProfile` twice for same user+category results in exactly 1 row in `style_profiles` for that pair (unique enforced).",
+      "`next build` completes successfully."
+    ]
+  },
+  "covers": [
+    "F1-AC2",
+    "F1-AC3",
+    "F1-AC4",
+    "F5-AC1"
+  ],
+  "files": [
+    "src/lib/models/learningSample.ts",
+    "src/lib/models/styleProfile.ts"
+  ],
+  "definition_of_done": [
+    "All DB writes use `crypto.randomUUID()` IDs and set timestamps in ms.",
+    "Upsert uses SQLite `INSERT ... ON CONFLICT(userId,categoryId) DO UPDATE` to avoid racey delete+insert.",
+    "Build passes with strict TypeScript."
+  ],
+  "depends_on": [
+    "0001"
+  ],
+  "db_schema": "",
+  "api_contract": "",
+  "dependencies": [],
+  "ui_requirements": ""
+}

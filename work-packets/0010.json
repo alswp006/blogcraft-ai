@@ -1,0 +1,35 @@
+{
+  "id": "0010",
+  "title": "Upload storage utilities (filesystem + mime guard)",
+  "epic": "Epic 1. Data Layer",
+  "task": {
+    "description": "Implement server-side upload helpers to support future API routes: ensure `./data/uploads` exists, persist a provided File to disk under `data/uploads/{subdir}` with UUID filenames, and validate supported photo mime types per SPEC.",
+    "acceptance_criteria": [
+      "`ensureUploadsDir()` creates `data/uploads` when missing and does not throw when the directory already exists.",
+      "`isSupportedImageMime(m)` returns true only for `image/jpeg`, `image/png`, `image/webp`; returns false for `image/gif` and `text/plain`.",
+      "`saveUploadedFile(file,'photos')` writes a file under `data/uploads/photos/` and returns `storedFilePath` that begins with `data/uploads/photos/` plus a UUID-based filename.",
+      "The returned `originalFileName` equals the input File name, and the saved file size on disk equals `file.size`.",
+      "`next build` completes successfully."
+    ]
+  },
+  "covers": [
+    "F1-AC3",
+    "F2-AC1",
+    "F2-AC5"
+  ],
+  "files": [
+    "src/lib/uploads/storage.ts"
+  ],
+  "definition_of_done": [
+    "Uses Node fs APIs compatible with Next.js server runtime (no client usage).",
+    "Creates subdirectories recursively and normalizes stored paths for consistent DB storage.",
+    "Build passes with strict TypeScript."
+  ],
+  "depends_on": [
+    "0002"
+  ],
+  "db_schema": "",
+  "api_contract": "",
+  "dependencies": [],
+  "ui_requirements": ""
+}

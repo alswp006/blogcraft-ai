@@ -1,0 +1,38 @@
+{
+  "id": "0006",
+  "title": "Post + Photo models (draft + photo ordering)",
+  "epic": "Epic 1. Data Layer",
+  "task": {
+    "description": "Add `posts` and `photos` models to support draft creation and photo management: create/get/list posts, list photos by post ordered by `sortOrder`, insert photo using the next `sortOrder`, and expose a bulk reorder helper for later UI.",
+    "acceptance_criteria": [
+      "`createPost(userId,{categoryId,locationName,overallNote})` inserts a post with `status='draft'`, empty `title` and `contentMarkdown`, and integer `createdAt`/`updatedAt`.",
+      "`getPostById(postId)` returns null for missing post; otherwise includes `userId` and `categoryId` fields for ownership checks.",
+      "`listPhotosByPost(userId,postId)` returns only photos for that post and is sorted strictly by `sortOrder ASC`.",
+      "`addPhotoWithNextSortOrder(...)` sets `sortOrder` to 1 when no photos exist; when max sortOrder is 3 it inserts with sortOrder 4.",
+      "Inserting more than 20 photos for the same post causes an error (trigger abort) rather than returning a 21st row.",
+      "`next build` completes successfully."
+    ]
+  },
+  "covers": [
+    "F2-AC1",
+    "F2-AC2",
+    "F3-AC1",
+    "F3-AC2"
+  ],
+  "files": [
+    "src/lib/models/post.ts",
+    "src/lib/models/photo.ts"
+  ],
+  "definition_of_done": [
+    "All queries scope by `userId` where applicable (photos listing, reorder), returning null/empty without leaking other users’ data.",
+    "Bulk reorder helper updates rows in a transaction and relies on unique(postId,sortOrder).",
+    "Build passes with strict TypeScript."
+  ],
+  "depends_on": [
+    "0001"
+  ],
+  "db_schema": "",
+  "api_contract": "",
+  "dependencies": [],
+  "ui_requirements": ""
+}

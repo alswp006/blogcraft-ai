@@ -1,0 +1,38 @@
+{
+  "id": "0002",
+  "title": "Shared time + API error response helpers",
+  "epic": "Epic 1. Data Layer",
+  "task": {
+    "description": "Add small shared utilities for time conversion and SPEC-compliant API error responses. These will be used by upcoming API routes to ensure consistent timestamp formatting and error JSON shape across endpoints.",
+    "acceptance_criteria": [
+      "`msToIso(0)` returns exactly `\"1970-01-01T00:00:00.000Z\"`.",
+      "`isoNowMs()` returns a number `n` where `Math.abs(Date.now()-n) < 2000` at call time.",
+      "`apiError(400,{code:'VALIDATION_ERROR',message:'x'})` returns a Response with status 400 and JSON body `{ \"error\": {\"code\":\"VALIDATION_ERROR\",\"message\":\"x\"} }`.",
+      "When `fieldErrors` is provided, the response JSON includes `error.fieldErrors` with the same keys and values.",
+      "`next build` completes successfully."
+    ]
+  },
+  "covers": [
+    "F1-AC5",
+    "F2-AC4",
+    "F3-AC3",
+    "F5-AC2",
+    "F6-AC5"
+  ],
+  "files": [
+    "src/lib/time.ts",
+    "src/lib/api/errors.ts"
+  ],
+  "definition_of_done": [
+    "Helpers are pure and have explicit TypeScript types compatible with strict mode.",
+    "No runtime dependency on browser-only APIs; code runs in Next.js route handlers.",
+    "Build passes with no type errors."
+  ],
+  "depends_on": [
+    "0001"
+  ],
+  "db_schema": "",
+  "api_contract": "",
+  "dependencies": [],
+  "ui_requirements": ""
+}
