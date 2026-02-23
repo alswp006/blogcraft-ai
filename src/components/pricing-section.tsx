@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 export type Plan = {
   name: string;
@@ -45,12 +47,12 @@ export function PricingSection({ plans }: PricingSectionProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
       {plans.map((plan) => (
-        <div
+        <Card
           key={plan.name}
-          className={`relative rounded-2xl flex flex-col transition-all duration-300 ${
+          className={`relative flex flex-col ${
             plan.highlighted
-              ? "border-2 border-[var(--accent)] bg-[var(--bg-card)] shadow-2xl shadow-[var(--accent)]/15 hover:shadow-[var(--accent)]/25"
-              : "border border-[var(--border)] bg-[var(--bg-card)] hover:border-[var(--accent)]/30 hover:shadow-xl hover:shadow-black/20"
+              ? "border-2 border-[var(--accent)] shadow-2xl shadow-[var(--accent)]/15 hover:shadow-[var(--accent)]/25"
+              : ""
           }`}
         >
           {plan.highlighted && (
@@ -61,7 +63,7 @@ export function PricingSection({ plans }: PricingSectionProps) {
             </div>
           )}
 
-          <div className={`p-6 md:p-8 flex flex-col flex-1 ${plan.highlighted ? "pt-10" : ""}`}>
+          <CardContent className={`pt-6 flex flex-col flex-1 ${plan.highlighted ? "pt-10" : ""}`}>
             <div className="space-y-2 mb-6">
               <h3 className="text-lg font-semibold text-[var(--text)]">{plan.name}</h3>
               {plan.description && (
@@ -105,39 +107,33 @@ export function PricingSection({ plans }: PricingSectionProps) {
 
             <div>
               {!stripeEnabled ? (
-                <Link
-                  href="/signup"
-                  className={`block text-center text-sm font-semibold px-6 py-3 rounded-xl no-underline transition-all duration-200 ${
-                    plan.highlighted
-                      ? "bg-[var(--accent)] text-white hover:opacity-90 shadow-lg shadow-[var(--accent)]/25"
-                      : "border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-elevated)] hover:text-[var(--text)]"
-                  }`}
+                <Button
+                  asChild
+                  variant={plan.highlighted ? "default" : "outline"}
+                  className="w-full"
                 >
-                  {isFree(plan.price) ? "무료로 시작하기" : isCustom(plan.price) ? "영업팀 문의" : "시작하기"}
-                </Link>
+                  <Link href="/signup" className="no-underline">
+                    {isFree(plan.price) ? "무료로 시작하기" : isCustom(plan.price) ? "영업팀 문의" : "시작하기"}
+                  </Link>
+                </Button>
               ) : isFree(plan.price) ? (
-                <Link
-                  href="/signup"
-                  className="block text-center text-sm font-medium px-6 py-3 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] no-underline hover:bg-[var(--bg-elevated)] hover:text-[var(--text)] transition-all duration-200"
-                >
-                  무료로 시작하기
-                </Link>
+                <Button asChild variant="outline" className="w-full">
+                  <Link href="/signup" className="no-underline">
+                    무료로 시작하기
+                  </Link>
+                </Button>
               ) : isCustom(plan.price) ? (
-                <a
-                  href="mailto:sales@blogcraft.ai"
-                  className="block text-center text-sm font-medium px-6 py-3 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] no-underline hover:bg-[var(--bg-elevated)] hover:text-[var(--text)] transition-all duration-200"
-                >
-                  영업팀 문의
-                </a>
+                <Button asChild variant="outline" className="w-full">
+                  <a href="mailto:sales@blogcraft.ai" className="no-underline">
+                    영업팀 문의
+                  </a>
+                </Button>
               ) : (
-                <button
+                <Button
                   onClick={() => handleCheckout(plan.priceId)}
                   disabled={loading === plan.priceId}
-                  className={`w-full text-sm font-semibold px-6 py-3 rounded-xl transition-all duration-200 cursor-pointer ${
-                    plan.highlighted
-                      ? "bg-[var(--accent)] text-white hover:opacity-90 shadow-lg shadow-[var(--accent)]/25"
-                      : "border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-elevated)] hover:text-[var(--text)]"
-                  } disabled:opacity-50 disabled:cursor-not-allowed`}
+                  variant={plan.highlighted ? "default" : "outline"}
+                  className="w-full"
                 >
                   {loading === plan.priceId ? (
                     <span className="flex items-center justify-center gap-2">
@@ -148,11 +144,11 @@ export function PricingSection({ plans }: PricingSectionProps) {
                       이동 중...
                     </span>
                   ) : "시작하기"}
-                </button>
+                </Button>
               )}
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       ))}
     </div>
   );

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 export function Nav() {
   const router = useRouter();
@@ -86,20 +87,18 @@ export function Nav() {
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-1">
-          <Link
-            href="/pricing"
-            className="px-3 py-2 text-sm text-[var(--text-secondary)] no-underline hover:text-[var(--text)] hover:bg-[var(--bg-elevated)] rounded-lg transition-all duration-200"
-          >
-            Pricing
-          </Link>
+          <Button variant="ghost" size="sm" asChild>
+            <Link href="/pricing" className="no-underline">
+              Pricing
+            </Link>
+          </Button>
           {user ? (
             <>
-              <Link
-                href="/dashboard"
-                className="px-3 py-2 text-sm text-[var(--text-secondary)] no-underline hover:text-[var(--text)] hover:bg-[var(--bg-elevated)] rounded-lg transition-all duration-200"
-              >
-                Dashboard
-              </Link>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/dashboard" className="no-underline">
+                  Dashboard
+                </Link>
+              </Button>
               <div className="w-px h-4 bg-[var(--border)] mx-1" />
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border)]">
                 <div className="w-6 h-6 rounded-full bg-[var(--accent)]/20 flex items-center justify-center">
@@ -109,27 +108,27 @@ export function Nav() {
                 </div>
                 <span className="text-xs text-[var(--text-muted)] max-w-[120px] truncate">{user.email}</span>
               </div>
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={handleLogout}
-                className="ml-1 px-3 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--danger)] hover:bg-[var(--danger-soft)] rounded-lg transition-all duration-200 cursor-pointer"
+                className="ml-1 hover:text-[var(--danger)] hover:bg-[var(--danger-soft)]"
               >
                 Logout
-              </button>
+              </Button>
             </>
           ) : (
             <>
-              <Link
-                href="/login"
-                className="px-4 py-2 text-sm text-[var(--text-secondary)] no-underline hover:text-[var(--text)] hover:bg-[var(--bg-elevated)] rounded-lg transition-all duration-200"
-              >
-                Login
-              </Link>
-              <Link
-                href="/signup"
-                className="ml-1 px-4 py-2 text-sm font-medium rounded-lg bg-[var(--accent)] text-white no-underline hover:opacity-90 transition-opacity shadow-md shadow-[var(--accent)]/25"
-              >
-                무료 시작
-              </Link>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/login" className="no-underline">
+                  Login
+                </Link>
+              </Button>
+              <Button size="sm" asChild className="ml-1">
+                <Link href="/signup" className="no-underline">
+                  무료 시작
+                </Link>
+              </Button>
             </>
           )}
         </div>
@@ -142,42 +141,40 @@ export function Nav() {
         }`}
       >
         <div className="border-t border-[var(--border)] bg-[var(--bg-elevated)] px-4 py-4 space-y-1">
-          <Link
-            href="/pricing"
-            className="flex items-center px-3 py-2.5 text-sm text-[var(--text-secondary)] no-underline hover:text-[var(--text)] hover:bg-[var(--bg-card)] rounded-lg transition-all duration-200"
-          >
-            Pricing
-          </Link>
+          <Button variant="ghost" size="sm" asChild className="w-full justify-start">
+            <Link href="/pricing" className="no-underline">
+              Pricing
+            </Link>
+          </Button>
           {user ? (
             <>
-              <Link
-                href="/dashboard"
-                className="flex items-center px-3 py-2.5 text-sm text-[var(--text-secondary)] no-underline hover:text-[var(--text)] hover:bg-[var(--bg-card)] rounded-lg transition-all duration-200"
-              >
-                Dashboard
-              </Link>
+              <Button variant="ghost" size="sm" asChild className="w-full justify-start">
+                <Link href="/dashboard" className="no-underline">
+                  Dashboard
+                </Link>
+              </Button>
               <div className="px-3 py-2 text-xs text-[var(--text-muted)] truncate">{user.email}</div>
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={handleLogout}
-                className="w-full flex items-center px-3 py-2.5 text-sm text-[var(--danger)] hover:bg-[var(--danger-soft)] rounded-lg transition-all duration-200 cursor-pointer"
+                className="w-full justify-start text-[var(--danger)] hover:bg-[var(--danger-soft)]"
               >
                 Logout
-              </button>
+              </Button>
             </>
           ) : (
             <div className="flex gap-2 pt-2">
-              <Link
-                href="/login"
-                className="flex-1 text-center text-sm px-4 py-2.5 rounded-lg border border-[var(--border)] text-[var(--text-secondary)] no-underline hover:bg-[var(--bg-card)] transition-all duration-200"
-              >
-                Login
-              </Link>
-              <Link
-                href="/signup"
-                className="flex-1 text-center text-sm font-medium px-4 py-2.5 rounded-lg bg-[var(--accent)] text-white no-underline hover:opacity-90 transition-opacity shadow-md shadow-[var(--accent)]/25"
-              >
-                무료 시작
-              </Link>
+              <Button variant="outline" size="sm" asChild className="flex-1">
+                <Link href="/login" className="no-underline">
+                  Login
+                </Link>
+              </Button>
+              <Button size="sm" asChild className="flex-1">
+                <Link href="/signup" className="no-underline">
+                  무료 시작
+                </Link>
+              </Button>
             </div>
           )}
         </div>

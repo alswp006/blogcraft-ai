@@ -83,105 +83,46 @@
 - JSON imports: add "resolveJsonModule": true in tsconfig if needed
 - Missing types: check @types/ packages are in devDependencies
 
-## Design System — MANDATORY (follow exactly)
+## Design System — shadcn/ui + "Linear meets Notion" aesthetic
+Read `.claude/skills/frontend-design/SKILL.md` for full aesthetic direction.
 
-### Page Layout Architecture
-CRITICAL PATTERN — every page must follow this structure:
-- Page wrapper: NO max-width, NO horizontal padding (allows full-width sections)
-- Each section: full-width wrapper + constrained content inside
-  `<section className="w-full py-20"><div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">{content}</div></section>`
-- Hero sections: w-full min-h-[70vh] flex items-center, gradient bg spans full width
-- NEVER put max-w-* or px-* on the outermost page element
-- NEVER wrap the entire page in a single narrow container
+### Component Library (ALWAYS use — never raw HTML buttons/inputs/cards)
+```tsx
+import { Button } from "@/components/ui/button"    // variant: default|outline|ghost|secondary|destructive
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
+import { Textarea } from "@/components/ui/textarea"
+import { Badge } from "@/components/ui/badge"       // variant: default|secondary|destructive|success|warning|outline
+import { cn } from "@/lib/utils"                    // Class merging: cn("base", conditional && "extra")
+```
+- Button asChild pattern for links: `<Button asChild><Link href="/x" className="no-underline">Go</Link></Button>`
+- Ghost nav links: `<Button variant="ghost" size="sm" asChild>`
 
-### Responsive Design
-- Mobile first: default styles for mobile, then md: and lg: breakpoints
-- Grid: grid-cols-1 md:grid-cols-2 lg:grid-cols-3 (never fixed columns)
-- Text: text-3xl md:text-4xl lg:text-5xl for hero headlines
-- Padding: px-4 md:px-6 lg:px-8 inside content containers
-- Hide/show: hidden md:block for desktop-only elements
-- Stack on mobile: flex flex-col md:flex-row
+### Layout Rules
+- Page wrapper: NO max-width (full-bleed sections)
+- Each section: `<section className="w-full py-20"><div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">{content}</div></section>`
+- Hero: min-h-[70vh] flex items-center, gradient bg spans full width
+- Responsive: grid-cols-1 md:grid-cols-2 lg:grid-cols-3
 
-### Colors (CSS vars ONLY — never hardcode hex values)
+### CRITICAL: CSS Specificity (Tailwind v4)
+- `@import "tailwindcss"` puts utilities in `@layer` — any CSS OUTSIDE @layer overrides them
+- ALWAYS wrap base styles in `@layer base { }` — globals.css already does this
+
+### Colors (CSS vars ONLY — never hardcode hex)
 - bg: var(--bg), var(--bg-elevated), var(--bg-card), var(--bg-input)
-- border: var(--border), var(--border-hover)
 - text: var(--text), var(--text-secondary), var(--text-muted)
 - accent: var(--accent), var(--accent-soft)
+- border: var(--border), var(--border-hover)
 - semantic: var(--success-soft), var(--danger-soft), var(--warning-soft)
 
-### Typography Hierarchy (use exactly these, not custom sizes)
-- Hero headline: text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight
-- Page title: text-3xl font-bold tracking-tight
-- Section heading: text-2xl font-semibold tracking-tight
-- Card title: text-lg font-semibold
-- Body: text-base leading-relaxed text-[var(--text-secondary)]
-- Small/meta: text-sm text-[var(--text-muted)]
-- NEVER use plain unsized text — always specify size
-
-### Components (import from @/components/ui/)
-- Button: default/secondary/ghost/destructive, sizes: sm/default/lg
-- Card: CardHeader/CardTitle/CardDescription/CardContent/CardFooter
-- Input, Textarea, Badge(default/success/error/warning)
-
-### Cards & Containers
-- Base: rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] p-6 md:p-8
-- Hover: hover:shadow-lg hover:border-[var(--accent)]/30 transition-all duration-300
-- Feature cards: add icon with colored bg (rounded-xl w-12 h-12 flex items-center justify-center bg-[var(--accent)]/10 text-xl mb-4)
-- Stat cards: large number (text-3xl font-bold) + label below (text-sm text-[var(--text-muted)])
-
-### Buttons (NEVER leave unstyled)
-- Primary: bg-[var(--accent)] text-white rounded-xl px-6 py-3 font-medium hover:opacity-90 transition-opacity shadow-lg shadow-[var(--accent)]/25
-- Secondary: border border-[var(--border)] rounded-xl px-6 py-3 font-medium hover:bg-[var(--bg-card)] transition-colors
-- Ghost: rounded-xl px-4 py-2 hover:bg-[var(--bg-elevated)] transition-colors
-- ALL buttons must have: rounded corners, padding, hover state, transition
-
-### Section Spacing
-- Between major sections: py-20 md:py-28
-- Between heading and content: mb-12
-- Card grid gaps: gap-6 md:gap-8
-- Form field gaps: space-y-4
-- Text block gaps: space-y-3
-
-### Landing Page Blueprint (follow for landing/home page)
-1. Hero: w-full min-h-[70vh] flex items-center, subtle gradient bg (bg-gradient-to-b from-[var(--accent)]/5 via-transparent to-transparent), centered content, headline + subtitle + 2 buttons (primary + ghost)
-2. How It Works: py-20, section heading centered, 3-col grid, numbered steps (text-6xl font-bold text-[var(--accent)]/10 absolute), icon + title + description
-3. Features: py-20 bg-[var(--bg-elevated)]/50, 2x2 or 3-col grid of feature cards with icons
-4. CTA: py-20, rounded-2xl bg-gradient-to-r from-[var(--accent)]/10 to-purple-500/10 mx-6, centered headline + button
-5. Footer: py-12 border-t, grid grid-cols-2 md:grid-cols-4 gap-8, column headers text-sm font-semibold mb-3, links text-sm text-[var(--text-muted)] hover:text-[var(--text)]
-
-### Auth Pages Blueprint
-- Centered: min-h-screen flex items-center justify-center
-- Card: max-w-md w-full rounded-2xl border p-8 shadow-lg
-- Form: space-y-4, labels text-sm font-medium mb-1, inputs w-full rounded-xl border p-3
-- Submit: w-full rounded-xl py-3 bg-[var(--accent)] text-white font-medium
-- Cross-link: text-center text-sm mt-4, link in text-[var(--accent)]
-
-### Dashboard Blueprint
-- Layout: flex (sidebar optional) + main content area
-- Top: stat cards in grid grid-cols-2 md:grid-cols-4 gap-4
-- Content: data cards/tables below stats
-- Empty state: py-20 text-center, icon (text-4xl mb-4) + heading + description + CTA button
-
-### Visual Polish
-- Gradient text (hero only): bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent
-- Subtle grid bg (hero): CSS background-image with radial-gradient dots
-- ALL interactive elements: transition-all duration-200
-- ALL clickable elements: cursor-pointer + hover state
-- Icons: Use lucide-react. size-4 inline, size-5 buttons, size-8 empty states, size-12 hero features
-- Loading: animate-pulse with rounded bg-[var(--border)]
-- Empty: centered layout with icon + heading + CTA
-
-### ANTI-PATTERNS (FORBIDDEN — these make apps look like AI-generated slop)
-- ❌ Content not filling viewport width (narrow box with empty sides)
-- ❌ Putting max-w-* on the page wrapper instead of inside sections
-- ❌ Cards without hover effects or transitions
-- ❌ Buttons without rounded corners, shadows, or hover states
-- ❌ No spacing between sections (content crammed together)
-- ❌ Same text size everywhere (no hierarchy)
-- ❌ Footer as plain list of links (no columns or structure)
-- ❌ Forms without labels, proper spacing, or styled inputs
-- ❌ Plain dark/white background with no texture or gradient anywhere
-- ❌ Missing responsive breakpoints (looks bad on mobile)
+### Anti-patterns
+- Cramped layouts — generous whitespace is a feature
+- Flat hierarchy — vary size, weight, and color for contrast
+- Unstyled elements — every button/link needs rounded corners + hover state
+- Narrow trapped content — use available width, full-bleed sections
+- CSS outside `@layer` — breaks Tailwind utilities
+- Raw HTML for buttons/inputs/cards — ALWAYS use shadcn components from @/components/ui/
 
 ## Navigation
 - Every page reachable from header nav. Login<->Signup cross-linked.

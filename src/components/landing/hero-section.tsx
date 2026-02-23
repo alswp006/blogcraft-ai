@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 interface HeroSectionProps {
   headline: string;
@@ -28,10 +30,10 @@ export function HeroSection({
 
       <div className="relative max-w-6xl mx-auto px-4 md:px-6 lg:px-8 w-full flex flex-col items-center text-center space-y-8 py-24 md:py-32">
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--accent)]/25 bg-[var(--accent)]/8 text-sm text-[var(--accent)]">
-          <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse inline-block" />
+        <Badge variant="outline" className="px-4 py-2 rounded-full border-[var(--accent)]/25 bg-[var(--accent)]/8 text-[var(--accent)]">
+          <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse inline-block mr-2" />
           AI 말투 학습 기능 출시
-        </div>
+        </Badge>
 
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight max-w-4xl leading-tight gradient-text">
           {headline}
@@ -40,19 +42,17 @@ export function HeroSection({
           {subheadline}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 pt-2">
-          <Link
-            href={ctaHref}
-            className="px-8 py-4 rounded-xl bg-[var(--accent)] text-white font-semibold text-base no-underline hover:opacity-90 transition-all duration-200 shadow-xl shadow-[var(--accent)]/30 hover:shadow-[var(--accent)]/40 hover:-translate-y-0.5"
-          >
-            {ctaText}
-          </Link>
-          {secondaryCtaText && secondaryCtaHref && (
-            <Link
-              href={secondaryCtaHref}
-              className="px-8 py-4 rounded-xl border border-[var(--border-hover)] text-[var(--text-secondary)] font-medium text-base no-underline hover:bg-[var(--bg-card)] hover:border-[var(--accent)]/30 hover:text-[var(--text)] transition-all duration-200"
-            >
-              {secondaryCtaText}
+          <Button asChild size="lg" className="px-8 py-4 h-auto text-base shadow-xl shadow-[var(--accent)]/30 hover:shadow-[var(--accent)]/40 hover:-translate-y-0.5">
+            <Link href={ctaHref} className="no-underline">
+              {ctaText}
             </Link>
+          </Button>
+          {secondaryCtaText && secondaryCtaHref && (
+            <Button asChild variant="outline" size="lg" className="px-8 py-4 h-auto text-base border-[var(--border-hover)] hover:border-[var(--accent)]/30">
+              <Link href={secondaryCtaHref} className="no-underline">
+                {secondaryCtaText}
+              </Link>
+            </Button>
           )}
         </div>
 

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 interface CtaSectionProps {
   heading: string;
@@ -33,15 +34,14 @@ export function CtaSection({
             )}
           </div>
           <div className="relative flex flex-col sm:flex-row gap-3 justify-center pt-2">
-            <Link
-              href={ctaHref}
-              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-[var(--accent)] text-white font-semibold text-sm no-underline hover:opacity-90 transition-all duration-200 shadow-xl shadow-[var(--accent)]/30 hover:-translate-y-0.5"
-            >
-              {ctaText}
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </Link>
+            <Button asChild size="lg" className="px-8 shadow-xl shadow-[var(--accent)]/30 hover:-translate-y-0.5">
+              <Link href={ctaHref} className="no-underline inline-flex items-center gap-2">
+                {ctaText}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </Button>
           </div>
           <p className="relative text-xs text-[var(--text-muted)]">
             신용카드 없이 무료로 시작 · 언제든지 취소 가능
