@@ -34,9 +34,19 @@
 
 ## Testing
 - Write tests in src/__tests__/packet-{id}.test.ts alongside your implementation
-- Use vitest: import {describe,it,expect} from "vitest"
+- Use vitest: import {describe,it,expect,beforeEach,afterEach} from "vitest"
 - Use @/ alias for imports (vitest resolves @/ → src/)
 - Run pnpm test + pnpm typecheck before finishing
+
+### Test Best Practices (CRITICAL — follow these to avoid failures)
+- DB cleanup: In afterEach/beforeEach, delete child tables BEFORE parent tables (foreign key order)
+  Example: db.prepare("DELETE FROM posts").run(); THEN db.prepare("DELETE FROM categories").run();
+- Test isolation: Each test must create its own test data — never depend on data from other tests
+- Unique data: Use unique values per test (e.g., `test-user-${Date.now()}`) to avoid UNIQUE constraint violations
+- better-sqlite3: All DB calls are SYNCHRONOUS — use db.prepare().run(), NOT await db.prepare().run()
+- Timestamps: Never rely on insertion order for "latest" queries — use explicit ORDER BY or deterministic test data
+- API route tests: Use new Request() with proper headers, test both success and error cases
+- Auth in tests: Use createSessionToken(userId) from @/lib/auth — set it as cookie header in Request
 
 ## CRITICAL: Auth Cookie Pattern
 - Cookie name is "session_token" — this is set by createSession() in src/lib/auth.ts
@@ -241,6 +251,7 @@ CRITICAL PATTERN — every page must follow this structure:
 - All analytics/ads are optional — auto-disabled when env vars are empty
 
 ## TDD (CRITICAL)
-- src/__tests__/ template test files are READ-ONLY — NEVER modify them
-- Template tests define required exports. Read their imports to understand what modules to create
-- Always run pnpm test to ensure template tests still pass after your changes
+- Template tests (e.g., auth.test.ts) define required exports — read their imports to understand what modules to create
+- If a template test has bugs (wrong imports, missing setup), you CAN fix it
+- Always run pnpm test to ensure all tests pass after your changes
+- When writing new tests, follow the Test Best Practices section above
