@@ -161,23 +161,13 @@ import { cn } from "@/lib/utils"                    // Class merging: cn("base",
 
 
 
-## Pre-built Payments & Subscriptions (DO NOT RECREATE)
+## Pre-built Payment Backend (DORMANT — no UI)
+- CRITICAL: Do NOT create pricing pages, pricing nav links, tier badges, or upgrade buttons. Monetization UI is handled separately via the orchestrator dashboard.
 - src/lib/stripe.ts — Stripe SDK wrapper (lazy-loaded, safe when STRIPE_SECRET_KEY is empty)
-  - createCheckoutSession(), createPortalSession(), getSubscription(), constructWebhookEvent()
-  - isStripeConfigured() — returns false if no key, features gracefully degrade
-- src/lib/subscription.ts — Subscription management
-  - getSubscriptionTier(userId) — returns "free" | "pro" | "enterprise"
-  - canAccessFeature(userId, featureKey) — checks tier vs feature config
-  - upsertSubscription(), deactivateSubscription()
+- src/lib/subscription.ts — Subscription management (getSubscriptionTier, canAccessFeature)
 - src/config/features.ts — Feature gating config (FEATURE_MAP + hasAccess helper)
-- src/app/api/payments/checkout/route.ts — POST, creates Stripe Checkout session
-- src/app/api/payments/portal/route.ts — POST, creates Stripe billing portal
-- src/app/api/payments/webhook/route.ts — POST, handles Stripe webhook events
-- src/app/api/payments/access/route.ts — GET, checks feature access for current user
-- src/app/pricing/page.tsx — Pricing page with tier comparison
-- src/components/premium-gate.tsx — Wraps premium content, shows upgrade prompt for free users
-- src/components/pricing-section.tsx — Reusable pricing cards component
-- To add premium features: add entry to FEATURE_MAP in src/config/features.ts
+- src/app/api/payments/ — API routes (checkout, portal, webhook, access)
+- src/components/premium-gate.tsx — Available but do NOT use unless explicitly requested
 - Stripe keys are optional — app works without them (all features free)
 
 ## Pre-built Landing Page Components (USE these, do NOT recreate)
@@ -185,7 +175,7 @@ import { cn } from "@/lib/utils"                    // Class merging: cn("base",
 - src/components/landing/feature-grid.tsx — FeatureGrid({ features: { icon, title, description }[] })
 - src/components/landing/cta-section.tsx — CtaSection({ headline, description, ctaText, ctaHref })
 - src/components/landing/footer.tsx — Footer component
-- src/components/landing/pricing-display.tsx — PricingDisplay component
+- Do NOT use pricing-display.tsx or pricing-section.tsx — monetization UI is handled separately
 - When building the landing page, import and compose these components — do NOT write raw HTML/JSX
 
 ## Pre-built SEO & Analytics (DO NOT RECREATE)

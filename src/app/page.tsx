@@ -1,6 +1,6 @@
 import { HeroSection } from "@/components/landing/hero-section";
 import { FeatureGrid } from "@/components/landing/feature-grid";
-import { PricingDisplay } from "@/components/landing/pricing-display";
+
 import { CtaSection } from "@/components/landing/cta-section";
 import { Footer } from "@/components/landing/footer";
 import { generateMetadata as seo } from "@/lib/seo";
@@ -123,23 +123,6 @@ export default function HomePage() {
       <div id="features">
         <FeatureGrid features={FEATURES} />
       </div>
-
-      {/* Pricing */}
-      <section className="w-full py-24 relative">
-        <div className="section-gradient-divider w-full absolute top-0" />
-        <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <p className="text-sm font-medium text-[var(--accent)] mb-3 uppercase tracking-widest">Pricing</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--text)] mb-4">
-              합리적인 요금제
-            </h2>
-            <p className="text-[var(--text-secondary)] text-lg max-w-2xl mx-auto">
-              무료로 시작하고, 필요에 따라 업그레이드하세요
-            </p>
-          </div>
-          <PricingDisplay />
-        </div>
-      </section>
 
       <CtaSection />
       <Footer />

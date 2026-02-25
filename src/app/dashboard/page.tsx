@@ -2,7 +2,6 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth";
 import { listPostsByUser } from "@/lib/models/post";
-import { getSubscriptionTier } from "@/lib/subscription";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,19 +22,12 @@ export default async function DashboardPage() {
   }
 
   const posts = listPostsByUser(String(user.id));
-  const tier = getSubscriptionTier(user.id);
 
   const stats = [
     { label: "전체 글", value: posts.length },
     { label: "작성 중", value: posts.filter((p) => p.status === "draft").length },
     { label: "완성됨", value: posts.filter((p) => p.status === "generated" || p.status === "exported").length },
   ];
-
-  const tierLabels: Record<string, string> = {
-    free: "무료",
-    pro: "Pro",
-    enterprise: "Enterprise",
-  };
 
   return (
     <div className="w-full py-10">
@@ -49,16 +41,6 @@ export default async function DashboardPage() {
             <p className="text-[var(--text-secondary)] mt-1">
               오늘도 멋진 블로그 글을 작성해 보세요
             </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <Badge variant="secondary" className="text-xs px-3 py-1">
-              {tierLabels[tier] ?? tier} 플랜
-            </Badge>
-            {tier === "free" && (
-              <Button size="sm" asChild>
-                <Link href="/pricing" className="no-underline">업그레이드</Link>
-              </Button>
-            )}
           </div>
         </div>
 

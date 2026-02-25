@@ -67,9 +67,6 @@ export function Nav() {
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-1">
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/pricing" className="no-underline">요금제</Link>
-            </Button>
             {user && (
               <Button variant="ghost" size="sm" asChild>
                 <Link href="/dashboard" className="no-underline">대시보드</Link>
@@ -138,9 +135,6 @@ export function Nav() {
           )}
         >
           <div className="flex flex-col gap-1 pt-2 border-t border-[var(--border)]">
-            <Button variant="ghost" size="sm" asChild className="justify-start">
-              <Link href="/pricing" className="no-underline" onClick={() => setMenuOpen(false)}>요금제</Link>
-            </Button>
             {user ? (
               <>
                 <Button variant="ghost" size="sm" asChild className="justify-start">

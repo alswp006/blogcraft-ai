@@ -6,7 +6,6 @@ export function Footer() {
   const links = {
     제품: [
       { label: "기능", href: "/#features" },
-      { label: "요금제", href: "/pricing" },
       { label: "대시보드", href: "/dashboard" },
     ],
     계정: [
