@@ -25,17 +25,17 @@
 }
 
 :root {
-  --bg: #08080e;
-  --bg-elevated: #0f0f18;
-  --bg-card: #13131e;
-  --bg-input: #181824;
-  --border: #1e1e2e;
-  --border-hover: #2e2e48;
-  --text: #eeeef5;
-  --text-secondary: #a6a6bc;
-  --text-muted: #5c5c78;
+  --bg: #09090f;
+  --bg-elevated: #13131f;
+  --bg-card: #15152a;
+  --bg-input: #0d0d18;
+  --border: #2a2a45;
+  --border-hover: #3d3d60;
+  --text: #f0f0f8;
+  --text-secondary: #a8a8c0;
+  --text-muted: #6a6a88;
   --accent: #6366f1;
-  --accent-soft: rgba(99, 102, 241, 0.12);
+  --accent-soft: rgba(99, 102, 241, 0.15);
   --success: #34d399;
   --success-soft: rgba(52, 211, 153, 0.12);
   --danger: #f87171;
@@ -44,34 +44,35 @@
   --warning-soft: rgba(251, 191, 36, 0.12);
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", Roboto, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  line-height: 1.7;
-}
-
-::selection {
-  background: rgba(99, 102, 241, 0.3);
-  color: var(--text);
-}
-
-/* Base styles in @layer so Tailwind utilities (text-white etc.) can override */
+/* ── ALL base styles MUST be in @layer base ──
+   Otherwise they override Tailwind utilities (pt-16, px-4, gap-6, etc.) */
 @layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.7;
+  }
+
+  ::selection {
+    background: rgba(99, 102, 241, 0.3);
+    color: var(--text);
+  }
+
   a {
     color: var(--accent);
     text-decoration: none;
@@ -81,7 +82,7 @@ body {
   }
 }
 
-/* Scrollbar */
+/* Scrollbar (pseudo-elements — no Tailwind conflict) */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -97,33 +98,32 @@ body {
   background: var(--text-muted);
 }
 
-/* Card utility */
-.card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 1rem;
-  transition: all 0.3s ease;
-}
-.card:hover {
-  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.5);
-  border-color: rgba(99, 102, 241, 0.3);
-}
+/* ── Custom utilities in @layer so Tailwind can override ── */
+@layer components {
+  .hero-grid-bg {
+    background-image: radial-gradient(circle at 1px 1px, rgba(99, 102, 241, 0.08) 1px, transparent 0);
+    background-size: 32px 32px;
+  }
 
-/* Hero grid background */
-.hero-grid-bg {
-  background-image: radial-gradient(circle at 1px 1px, rgba(99, 102, 241, 0.07) 1px, transparent 0);
-  background-size: 36px 36px;
-}
+  .gradient-text {
+    background: linear-gradient(135deg, #ffffff 0%, #c7c7ff 50%, rgba(255, 255, 255, 0.6) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 
-/* Gradient text utility */
-.gradient-text {
-  background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.55) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
+  .glow-accent {
+    box-shadow: 0 0 60px rgba(99, 102, 241, 0.25), 0 0 120px rgba(99, 102, 241, 0.1);
+  }
 
-/* Glow utilities */
-.glow-accent {
-  box-shadow: 0 0 30px rgba(99, 102, 241, 0.2);
+  .section-gradient-divider {
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    height: 1px;
+  }
+
+  .glass-card {
+    background: linear-gradient(135deg, rgba(21, 21, 42, 0.8) 0%, rgba(13, 13, 24, 0.6) 100%);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(99, 102, 241, 0.15);
+  }
 }

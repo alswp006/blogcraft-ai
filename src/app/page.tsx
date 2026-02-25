@@ -66,9 +66,11 @@ export default function HomePage() {
       </div>
 
       {/* How it works */}
-      <section className="w-full py-20">
+      <section className="w-full py-24 relative">
+        <div className="section-gradient-divider w-full absolute top-0" />
         <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
-          <div className="text-center mb-14">
+          <div className="text-center mb-16">
+            <p className="text-sm font-medium text-[var(--accent)] mb-3 uppercase tracking-widest">How it works</p>
             <h2 className="text-3xl md:text-4xl font-bold text-[var(--text)] mb-4">
               3단계로 완성
             </h2>
@@ -77,29 +79,33 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             {[
               {
                 step: "01",
                 title: "사진 & 메모 업로드",
-                description:
-                  "방문한 장소의 사진과 간단한 메모를 올려주세요.",
+                description: "방문한 장소의 사진과 간단한 메모를 올려주세요.",
+                gradient: "from-blue-500/20 to-indigo-500/20",
               },
               {
                 step: "02",
                 title: "AI가 글 작성",
-                description:
-                  "내 말투로 SEO에 최적화된 블로그 글을 자동 생성합니다.",
+                description: "내 말투로 SEO에 최적화된 블로그 글을 자동 생성합니다.",
+                gradient: "from-purple-500/20 to-pink-500/20",
               },
               {
                 step: "03",
                 title: "수정 & 발행",
-                description:
-                  "생성된 글을 확인하고 수정한 뒤 바로 발행하세요.",
+                description: "생성된 글을 확인하고 수정한 뒤 바로 발행하세요.",
+                gradient: "from-emerald-500/20 to-teal-500/20",
               },
-            ].map((item) => (
-              <div key={item.step} className="text-center">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[var(--accent-soft)] text-[var(--accent)] text-xl font-bold mb-5">
+            ].map((item, i) => (
+              <div key={item.step} className="relative text-center">
+                {/* Connector line */}
+                {i < 2 && (
+                  <div className="hidden md:block absolute top-8 left-[calc(50%+32px)] w-[calc(100%-64px)] h-px bg-gradient-to-r from-[var(--border)] to-transparent" />
+                )}
+                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${item.gradient} border border-[var(--border)] text-xl font-bold text-[var(--text)] mb-5`}>
                   {item.step}
                 </div>
                 <h3 className="text-lg font-semibold text-[var(--text)] mb-2">
@@ -119,9 +125,11 @@ export default function HomePage() {
       </div>
 
       {/* Pricing */}
-      <section className="w-full py-20">
+      <section className="w-full py-24 relative">
+        <div className="section-gradient-divider w-full absolute top-0" />
         <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
-          <div className="text-center mb-14">
+          <div className="text-center mb-16">
+            <p className="text-sm font-medium text-[var(--accent)] mb-3 uppercase tracking-widest">Pricing</p>
             <h2 className="text-3xl md:text-4xl font-bold text-[var(--text)] mb-4">
               합리적인 요금제
             </h2>
