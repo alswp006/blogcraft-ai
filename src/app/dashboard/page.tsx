@@ -16,7 +16,11 @@ export const metadata = seo({
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
-  if (!user) redirect("/login");
+  if (!user) {
+    // Stale session — redirect with logged_out param so middleware
+    // clears the cookie instead of redirecting back here in a loop.
+    redirect("/login?logged_out");
+  }
 
   const posts = listPostsByUser(String(user.id));
   const tier = getSubscriptionTier(user.id);
