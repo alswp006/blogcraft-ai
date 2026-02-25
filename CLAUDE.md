@@ -151,6 +151,8 @@ import { cn } from "@/lib/utils"                    // Class merging: cn("base",
 - src/app/{login,signup}/page.tsx — UI pages
 - src/middleware.ts — route protection (/dashboard/* requires auth)
 - To add new protected routes: update PROTECTED_PREFIXES in middleware.ts
+- CRITICAL: Stale session handling — when dashboard detects no user, use `redirect("/login?logged_out")` (NOT `redirect("/login")`). The `?logged_out` param tells middleware to clear the stale cookie. Without it → infinite redirect loop.
+- CRITICAL: NEVER call destroySession() or cookies().delete() in Server Components — only Route Handlers and Server Actions can modify cookies in Next.js 15. Middleware handles cookie cleanup via the `?logged_out` param.
 
 ## Navigation
 - Every page reachable from header nav. Login<->Signup cross-linked.
