@@ -8,7 +8,7 @@ import { generateMetadata as seo } from "@/lib/seo";
 export const metadata = seo({
   title: "BlogCraft AI — AI 블로그 작성 도구",
   description:
-    "사진과 메모로 내 말투를 학습한 AI가 10분 만에 자연스러운 블로그 글을 만들고, SEO 최적화와 수익화까지 자동으로 도와줍니다.",
+    "사진과 메모로 내 말투를 학습한 AI가 10분 만에 자연스러운 블로그 글을 만들고, SEO 최적화까지 자동으로 도와줍니다.",
   path: "/",
 });
 
@@ -38,10 +38,10 @@ const FEATURES = [
       "키워드 분석, 메타 태그, 구조화 데이터까지 검색 엔진 최적화를 자동으로 처리합니다.",
   },
   {
-    icon: "💰",
-    title: "수익화 지원",
+    icon: "🖼️",
+    title: "이미지 자동 편집",
     description:
-      "애드센스 배치 최적화와 제휴 링크 삽입으로 블로그 수익화를 도와드립니다.",
+      "업로드한 사진을 블로그에 맞게 자동으로 리사이즈하고 최적화합니다.",
   },
   {
     icon: "📈",
@@ -58,7 +58,7 @@ export default function HomePage() {
         <HeroSection
           headline="AI로 블로그 글 완성"
           subheadline="사진과 메모만으로 내 말투를 학습한 AI가 자연스러운 블로그 글을 만들어 드립니다."
-          ctaText="무료로 시작하기"
+          ctaText="시작하기"
           ctaHref="/signup"
           secondaryCtaText="기능 살펴보기"
           secondaryCtaHref="/#features"

@@ -10,8 +10,8 @@ interface CtaSectionProps {
 
 export function CtaSection({
   heading = "지금 바로 시작하세요",
-  description = "사진 한 장으로 나만의 블로그 글을 완성하세요. 무료로 시작할 수 있습니다.",
-  ctaText = "무료로 시작하기",
+  description = "사진 한 장으로 나만의 블로그 글을 완성하세요.",
+  ctaText = "시작하기",
   ctaHref = "/signup",
 }: CtaSectionProps) {
   return (
@@ -53,7 +53,7 @@ export function CtaSection({
               </Button>
             </div>
 
-            <p className="mt-5 text-sm text-[var(--text-muted)]">신용카드 불필요 · 언제든 취소 가능</p>
+            <p className="mt-5 text-sm text-[var(--text-muted)]">가입 후 바로 사용 가능</p>
           </div>
         </div>
       </div>

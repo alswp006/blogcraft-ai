@@ -13,12 +13,18 @@ export function middleware(request: NextRequest) {
   // Check if route is protected
   const isProtected = PROTECTED_PREFIXES.some((p) => pathname.startsWith(p));
   const isAuthRoute = AUTH_ROUTES.some((p) => pathname.startsWith(p));
+  const isHome = pathname === "/";
 
   if (isProtected && !sessionToken) {
     // Not logged in → redirect to login
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
+  }
+
+  // Logged-in user on home page → redirect to dashboard
+  if (isHome && sessionToken) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   if (isAuthRoute && sessionToken) {
@@ -39,5 +45,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/login", "/signup"],
+  matcher: ["/", "/dashboard/:path*", "/login", "/signup"],
 };
