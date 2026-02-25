@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { use } from "react";
+import { PhotosSection } from "./components/PhotosSection";
+import { CrawlSection } from "./components/CrawlSection";
+import { GenerationSection } from "./components/GenerationSection";
+import { ExportSection } from "./components/ExportSection";
 
 type Post = {
   id: string;
@@ -26,6 +30,37 @@ type Photo = {
   originalFileName: string;
   storedFilePath: string;
   memo: string;
+  sortOrder: number;
+};
+
+type CrawlSource = {
+  id: string;
+  provider: string;
+  sourceUrl: string | null;
+  snippetText: string;
+  rating: number | null;
+};
+
+type CrawlSummary = {
+  id: string;
+  totalCount: number;
+  averageRating: number | null;
+  summaryText: string;
+};
+
+type PlagiarismCheck = {
+  similarityScore: number;
+  passed: number;
+};
+
+type SeoAnalysis = {
+  keywordDensityScore: number;
+  titleOptimizationScore: number;
+  metaDescriptionScore: number;
+  readabilityScore: number;
+  internalLinksScore: number;
+  overallScore: number;
+  suggestions: string;
 };
 
 const STATUS_MAP: Record<string, { text: string; variant: "default" | "secondary" | "outline" }> = {
@@ -37,10 +72,13 @@ const STATUS_MAP: Record<string, { text: string; variant: "default" | "secondary
 export default function PostDetailPage({ params }: { params: Promise<{ postId: string }> }) {
   const { postId } = use(params);
   const router = useRouter();
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [post, setPost] = useState<Post | null>(null);
   const [photos, setPhotos] = useState<Photo[]>([]);
+  const [crawlSummary, setCrawlSummary] = useState<CrawlSummary | null>(null);
+  const [crawlSources, setCrawlSources] = useState<CrawlSource[]>([]);
+  const [plagiarismCheck, setPlagiarismCheck] = useState<PlagiarismCheck | null>(null);
+  const [seoAnalysis, setSeoAnalysis] = useState<SeoAnalysis | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
@@ -49,7 +87,6 @@ export default function PostDetailPage({ params }: { params: Promise<{ postId: s
   const [editingNote, setEditingNote] = useState(false);
   const [noteDraft, setNoteDraft] = useState("");
   const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -63,6 +100,10 @@ export default function PostDetailPage({ params }: { params: Promise<{ postId: s
         if (d) {
           setPost(d.post);
           setPhotos(d.photos ?? []);
+          setCrawlSummary(d.crawlSummary ?? null);
+          setCrawlSources(d.crawlSources ?? []);
+          setPlagiarismCheck(d.plagiarismCheck ?? null);
+          setSeoAnalysis(d.seoAnalysis ?? null);
           setTitleDraft(d.post.title);
           setNoteDraft(d.post.overallNote);
         }
@@ -97,28 +138,6 @@ export default function PostDetailPage({ params }: { params: Promise<{ postId: s
     if (noteDraft !== post?.overallNote) {
       saveField({ overallNote: noteDraft });
     }
-  };
-
-  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files?.length) return;
-    setUploading(true);
-
-    for (const file of Array.from(e.target.files)) {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("memo", "");
-      const res = await fetch(`/api/posts/${postId}/photos`, {
-        method: "POST",
-        body: formData,
-      });
-      if (res.ok) {
-        const { photo } = await res.json();
-        setPhotos((prev) => [...prev, photo]);
-      }
-    }
-
-    setUploading(false);
-    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleDelete = async () => {
@@ -200,54 +219,12 @@ export default function PostDetailPage({ params }: { params: Promise<{ postId: s
             </span>
           </div>
 
-          {/* Photos */}
-          <Card>
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm">사진 ({photos.length})</CardTitle>
-                <div>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handlePhotoUpload}
-                    className="hidden"
-                  />
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={uploading}
-                  >
-                    {uploading ? "업로드 중..." : "+ 추가"}
-                  </Button>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              {photos.length === 0 ? (
-                <div
-                  onClick={() => fileInputRef.current?.click()}
-                  className="border-2 border-dashed border-[var(--border)] rounded-xl p-8 text-center cursor-pointer hover:border-[var(--accent)]/50 transition-colors"
-                >
-                  <p className="text-sm text-[var(--text-muted)]">사진을 추가해보세요</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-                  {photos.map((photo) => (
-                    <div key={photo.id} className="rounded-lg overflow-hidden border border-[var(--border)] aspect-square">
-                      <img
-                        src={photo.storedFilePath}
-                        alt={photo.originalFileName}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          {/* Photos (drag-drop) */}
+          <PhotosSection
+            postId={postId}
+            photos={photos}
+            onPhotosChange={setPhotos}
+          />
 
           {/* Note */}
           <Card>
@@ -274,31 +251,37 @@ export default function PostDetailPage({ params }: { params: Promise<{ postId: s
             </CardContent>
           </Card>
 
-          {/* Content */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm">본문</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {post.contentMarkdown ? (
-                <div className="prose prose-sm max-w-none text-[var(--text-secondary)] whitespace-pre-wrap">
-                  {post.contentMarkdown}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <p className="text-sm text-[var(--text-muted)] mb-4">
-                    아직 본문이 생성되지 않았습니다.
-                  </p>
-                  <Button
-                    variant="outline"
-                    onClick={() => alert("AI 글 생성 기능은 준비 중입니다.")}
-                  >
-                    AI 글 생성하기
-                  </Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          {/* Crawl */}
+          <CrawlSection
+            postId={postId}
+            crawlSummary={crawlSummary}
+            crawlSources={crawlSources}
+            onCrawlUpdate={(summary, sources) => {
+              setCrawlSummary(summary);
+              setCrawlSources(sources);
+            }}
+          />
+
+          {/* AI Generation + Analysis */}
+          <GenerationSection
+            postId={postId}
+            post={post}
+            plagiarismCheck={plagiarismCheck}
+            seoAnalysis={seoAnalysis}
+            onGenerated={(data) => {
+              setPost(data.post);
+              setPlagiarismCheck(data.plagiarismCheck);
+              setSeoAnalysis(data.seoAnalysis);
+              setTitleDraft(data.post.title);
+            }}
+          />
+
+          {/* Export */}
+          <ExportSection
+            postId={postId}
+            status={post.status}
+            hasPhotos={photos.length > 0}
+          />
 
           {/* Actions */}
           <div className="flex justify-end pt-4 border-t border-[var(--border)]">

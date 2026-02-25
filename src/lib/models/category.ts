@@ -48,3 +48,14 @@ export function listCategoriesByUser(userId: string): Category[] {
     userId,
   );
 }
+
+export function deleteCategory(categoryId: string, userId: string): boolean {
+  // Foreign key CASCADE deletes related data (learning_samples, style_profiles, monetization_tips)
+  // Posts reference categoryId but we keep them (they become orphaned — acceptable for MVP)
+  const result = execute(
+    "DELETE FROM categories WHERE id = ? AND userId = ?",
+    categoryId,
+    userId,
+  );
+  return result.changes > 0;
+}

@@ -77,3 +77,26 @@ export function countLearningSamplesForCategory(
   );
   return result?.count ?? 0;
 }
+
+export function listLearningSamplesForCategory(
+  userId: string,
+  categoryId: string,
+): LearningSample[] {
+  return query<LearningSample>(
+    "SELECT * FROM learning_samples WHERE userId = ? AND categoryId = ? ORDER BY createdAt DESC",
+    userId,
+    categoryId,
+  );
+}
+
+export function deleteLearningSample(
+  userId: string,
+  sampleId: string,
+): boolean {
+  const result = execute(
+    "DELETE FROM learning_samples WHERE id = ? AND userId = ?",
+    sampleId,
+    userId,
+  );
+  return result.changes > 0;
+}

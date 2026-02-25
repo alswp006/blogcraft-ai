@@ -68,9 +68,14 @@ export function Nav() {
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-1">
             {user && (
-              <Button variant="ghost" size="sm" asChild>
-                <Link href="/dashboard" className="no-underline">대시보드</Link>
-              </Button>
+              <>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/dashboard" className="no-underline">대시보드</Link>
+                </Button>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/dashboard/categories" className="no-underline">카테고리</Link>
+                </Button>
+              </>
             )}
           </nav>
 
@@ -139,6 +144,9 @@ export function Nav() {
               <>
                 <Button variant="ghost" size="sm" asChild className="justify-start">
                   <Link href="/dashboard" className="no-underline" onClick={() => setMenuOpen(false)}>대시보드</Link>
+                </Button>
+                <Button variant="ghost" size="sm" asChild className="justify-start">
+                  <Link href="/dashboard/categories" className="no-underline" onClick={() => setMenuOpen(false)}>카테고리</Link>
                 </Button>
                 <div className="flex items-center gap-2 px-3 py-2">
                   <div className="w-6 h-6 rounded-full bg-[var(--accent)] flex items-center justify-center text-xs font-semibold text-white">

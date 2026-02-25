@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSessionUserId } from "@/lib/auth";
 import { getPostById, updatePost, deletePost } from "@/lib/models/post";
 import { listPhotosByPost } from "@/lib/models/photo";
+import { getCrawlSummaryByPost } from "@/lib/models/crawlSummary";
+import { listCrawlSources } from "@/lib/models/crawlSource";
+import { getLatestPostVersion } from "@/lib/models/postVersion";
+import { getLatestPlagiarismCheck } from "@/lib/models/plagiarismCheck";
+import { getLatestSeoAnalysis } from "@/lib/models/seoAnalysis";
 
 function getUserId(request: NextRequest): number | null {
   const cookieHeader = request.headers.get("cookie") ?? "";
@@ -18,13 +23,32 @@ export async function GET(
   const userId = getUserId(request);
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const uid = String(userId);
   const post = getPostById(postId);
-  if (!post || post.userId !== String(userId)) {
+  if (!post || post.userId !== uid) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const photos = listPhotosByPost(String(userId), postId);
-  return NextResponse.json({ post, photos });
+  const photos = listPhotosByPost(uid, postId);
+  const crawlSummary = getCrawlSummaryByPost(uid, postId);
+  const crawlSources = listCrawlSources(uid, postId);
+  const latestVersion = getLatestPostVersion(uid, postId);
+  const plagiarismCheck = latestVersion
+    ? getLatestPlagiarismCheck(uid, postId, latestVersion.id)
+    : null;
+  const seoAnalysis = latestVersion
+    ? getLatestSeoAnalysis(uid, postId, latestVersion.id)
+    : null;
+
+  return NextResponse.json({
+    post,
+    photos,
+    crawlSummary,
+    crawlSources,
+    latestVersion,
+    plagiarismCheck,
+    seoAnalysis,
+  });
 }
 
 export async function PATCH(
