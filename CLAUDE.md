@@ -105,9 +105,14 @@ import { cn } from "@/lib/utils"                    // Class merging: cn("base",
 - Hero: min-h-[70vh] flex items-center, gradient bg spans full width
 - Responsive: grid-cols-1 md:grid-cols-2 lg:grid-cols-3
 
-### CRITICAL: CSS Specificity (Tailwind v4)
-- `@import "tailwindcss"` puts utilities in `@layer` — any CSS OUTSIDE @layer overrides them
-- ALWAYS wrap base styles in `@layer base { }` — globals.css already does this
+### CRITICAL: CSS Specificity (Tailwind v4) — DO NOT VIOLATE
+- `@import "tailwindcss"` puts utilities in `@layer utilities`
+- Any CSS OUTSIDE `@layer` has HIGHER specificity → silently overrides ALL Tailwind utilities (pt-16, px-4, gap-6, mb-4, text-white, etc.)
+- `* { padding: 0 }` outside @layer will BREAK EVERY LAYOUT IN THE APP
+- ALWAYS wrap base/reset/element styles in `@layer base { }`
+- ALWAYS wrap custom utility classes in `@layer components { }`
+- ONLY `:root` (CSS variable declarations) and scrollbar pseudo-elements may be outside @layer
+- If you edit globals.css: VERIFY every non-:root rule is inside an @layer block
 
 ### Colors (CSS vars ONLY — never hardcode hex)
 - bg: var(--bg), var(--bg-elevated), var(--bg-card), var(--bg-input)
