@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AdProvider>
           <AnalyticsProvider>
             <Nav />
-            <main className="relative">
+            <main className="relative pt-16">
               {children}
             </main>
           </AnalyticsProvider>

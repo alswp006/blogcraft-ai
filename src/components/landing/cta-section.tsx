@@ -2,50 +2,59 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 interface CtaSectionProps {
-  heading: string;
+  heading?: string;
   description?: string;
   ctaText?: string;
   ctaHref?: string;
 }
 
 export function CtaSection({
-  heading,
-  description,
+  heading = "지금 바로 시작하세요",
+  description = "사진 한 장으로 나만의 블로그 글을 완성하세요. 무료로 시작할 수 있습니다.",
   ctaText = "무료로 시작하기",
   ctaHref = "/signup",
 }: CtaSectionProps) {
   return (
-    <section className="w-full py-20 md:py-28">
+    <section className="w-full py-20">
       <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
-        <div className="relative rounded-2xl overflow-hidden p-10 md:p-16 text-center space-y-6">
-          {/* Background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent)]/12 via-purple-600/8 to-[var(--accent)]/5" />
-          <div className="absolute inset-0 border border-[var(--accent)]/15 rounded-2xl" />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-[var(--accent)]/10 blur-3xl rounded-full" />
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[var(--accent)] via-purple-600 to-indigo-700 p-12 md:p-16 text-center">
+          {/* Decorative elements */}
+          <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-white/5 -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full bg-white/5 translate-y-1/2 -translate-x-1/2" />
 
-          <div className="relative space-y-4">
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-[var(--text)]">
-              {heading}
-            </h2>
-            {description && (
-              <p className="text-base leading-relaxed text-[var(--text-secondary)] max-w-lg mx-auto">
-                {description}
-              </p>
-            )}
+          <div className="relative">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{heading}</h2>
+            <p className="text-white/75 text-lg mb-10 max-w-xl mx-auto">{description}</p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button
+                size="lg"
+                className="bg-white text-[var(--accent)] hover:bg-white/90 min-w-[180px] font-semibold"
+                asChild
+              >
+                <Link href={ctaHref} className="no-underline">
+                  {ctaText}
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    className="ml-1"
+                  >
+                    <path
+                      d="M3 8h10M9 4l4 4-4 4"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </Link>
+              </Button>
+            </div>
+
+            <p className="mt-5 text-sm text-white/60">신용카드 불필요 · 언제든 취소 가능</p>
           </div>
-          <div className="relative flex flex-col sm:flex-row gap-3 justify-center pt-2">
-            <Button asChild size="lg" className="px-8 shadow-xl shadow-[var(--accent)]/30 hover:-translate-y-0.5">
-              <Link href={ctaHref} className="no-underline inline-flex items-center gap-2">
-                {ctaText}
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </Link>
-            </Button>
-          </div>
-          <p className="relative text-xs text-[var(--text-muted)]">
-            신용카드 없이 무료로 시작 · 언제든지 취소 가능
-          </p>
         </div>
       </div>
     </section>

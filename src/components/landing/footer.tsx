@@ -1,110 +1,72 @@
 import Link from "next/link";
 
-interface FooterLink {
-  label: string;
-  href: string;
-}
+export function Footer() {
+  const year = new Date().getFullYear();
 
-interface FooterColumn {
-  title: string;
-  links: FooterLink[];
-}
-
-interface FooterProps {
-  columns?: FooterColumn[];
-  copyright?: string;
-}
-
-const defaultColumns: FooterColumn[] = [
-  {
-    title: "서비스",
-    links: [
-      { label: "기능 소개", href: "/#features" },
+  const links = {
+    제품: [
+      { label: "기능", href: "/#features" },
       { label: "요금제", href: "/pricing" },
       { label: "대시보드", href: "/dashboard" },
     ],
-  },
-  {
-    title: "리소스",
-    links: [
-      { label: "블로그", href: "/#" },
-      { label: "도움말", href: "/#" },
-      { label: "고객 지원", href: "/#" },
-    ],
-  },
-  {
-    title: "회사",
-    links: [
-      { label: "소개", href: "/#" },
-      { label: "개인정보처리방침", href: "/#" },
-      { label: "이용약관", href: "/#" },
-    ],
-  },
-  {
-    title: "계정",
-    links: [
-      { label: "회원가입", href: "/signup" },
+    계정: [
       { label: "로그인", href: "/login" },
+      { label: "회원가입", href: "/signup" },
     ],
-  },
-];
-
-export function Footer({ columns, copyright }: FooterProps) {
-  const cols = columns || defaultColumns;
-  const year = new Date().getFullYear();
+  };
 
   return (
-    <footer className="w-full border-t border-[var(--border)] py-12 md:py-16">
-      <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mb-12">
-          {/* Brand column */}
-          <div className="md:col-span-1 space-y-4">
-            <Link href="/" className="flex items-center gap-2 no-underline hover:no-underline group w-fit">
-              <div className="w-7 h-7 rounded-lg bg-[var(--accent)] flex items-center justify-center shadow-lg shadow-[var(--accent)]/30">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 20h9" />
-                  <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
+    <footer className="w-full border-t border-[var(--border)] bg-[var(--bg)]">
+      <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+          {/* Brand */}
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 rounded-lg bg-[var(--accent)] flex items-center justify-center shadow-sm">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-white">
+                  <path
+                    d="M13 2L9 6M3 10l4-4M3 13h3l7-7-3-3-7 7v3z"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </div>
-              <span className="text-sm font-bold text-[var(--text)] tracking-tight">
-                BlogCraft <span className="text-[var(--accent)]">AI</span>
-              </span>
-            </Link>
-            <p className="text-xs leading-relaxed text-[var(--text-muted)]">
-              AI로 더 쉽고 빠르게 블로그를 운영하세요.
+              <span className="font-semibold text-[var(--text)]">BlogCraft AI</span>
+            </div>
+            <p className="text-sm text-[var(--text-muted)] leading-relaxed max-w-xs">
+              사진과 메모로 AI가 자연스러운 블로그 글을 10분 만에 완성해 드립니다.
             </p>
           </div>
 
-          {/* Link columns */}
-          <div className="md:col-span-4 grid grid-cols-2 md:grid-cols-4 gap-8">
-            {cols.map((col) => (
-              <div key={col.title} className="space-y-4">
-                <h4 className="text-xs font-semibold text-[var(--text)] uppercase tracking-wider">
-                  {col.title}
-                </h4>
-                <ul className="space-y-3">
-                  {col.links.map((link) => (
-                    <li key={link.label}>
-                      <Link
-                        href={link.href}
-                        className="text-sm text-[var(--text-muted)] no-underline hover:text-[var(--text)] transition-colors duration-200"
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
+          {/* Links */}
+          {Object.entries(links).map(([category, items]) => (
+            <div key={category}>
+              <h4 className="text-sm font-semibold text-[var(--text)] mb-4">{category}</h4>
+              <ul className="space-y-2.5">
+                {items.map((item) => (
+                  <li key={item.label}>
+                    <Link
+                      href={item.href}
+                      className="text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition-colors no-underline hover:no-underline"
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
-        <div className="border-t border-[var(--border)] pt-6 flex flex-col md:flex-row items-center justify-between gap-2">
-          <p className="text-xs text-[var(--text-muted)]">
-            {copyright || `© ${year} BlogCraft AI. All rights reserved.`}
+        {/* Bottom */}
+        <div className="pt-6 border-t border-[var(--border)] flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-sm text-[var(--text-muted)]">
+            © {year} BlogCraft AI. All rights reserved.
           </p>
           <p className="text-xs text-[var(--text-muted)]">
-            Made with ♥ in Korea
+            Made with ❤️ for Korean bloggers
           </p>
         </div>
       </div>

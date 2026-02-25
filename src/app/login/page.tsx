@@ -1,26 +1,15 @@
 "use client";
 
-import { Suspense, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 export default function LoginPage() {
-  return (
-    <Suspense>
-      <LoginForm />
-    </Suspense>
-  );
-}
-
-function LoginForm() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect") ?? "/dashboard";
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -38,102 +27,96 @@ function LoginForm() {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error ?? "로그인에 실패했습니다");
-        return;
+      if (res.ok) {
+        router.push("/dashboard");
+        router.refresh();
+      } else {
+        const data = (await res.json()) as { error?: string };
+        setError(data.error ?? "로그인에 실패했습니다.");
       }
-
-      router.push(redirect);
-      router.refresh();
     } catch {
-      setError("네트워크 오류가 발생했습니다. 다시 시도해주세요.");
+      setError("오류가 발생했습니다. 다시 시도해 주세요.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md space-y-8">
-        {/* Brand */}
-        <div className="text-center space-y-2">
-          <Link href="/" className="inline-flex items-center gap-2 no-underline hover:no-underline mb-6 group">
-            <div className="w-8 h-8 rounded-xl bg-[var(--accent)] flex items-center justify-center shadow-lg shadow-[var(--accent)]/30">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 20h9" />
-                <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
-              </svg>
-            </div>
-            <span className="text-base font-bold text-[var(--text)] tracking-tight">
-              BlogCraft <span className="text-[var(--accent)]">AI</span>
-            </span>
-          </Link>
-          <h1 className="text-2xl font-bold tracking-tight text-[var(--text)]">다시 오셨군요!</h1>
-          <p className="text-sm text-[var(--text-secondary)]">계정에 로그인하세요</p>
-        </div>
+    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center pb-2">
+          <div className="mx-auto mb-4 w-12 h-12 rounded-xl bg-[var(--accent)] flex items-center justify-center shadow-lg shadow-[var(--accent)]/25">
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="none" className="text-white">
+              <path
+                d="M13 2L9 6M3 10l4-4M3 13h3l7-7-3-3-7 7v3z"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+          <CardTitle className="text-2xl">로그인</CardTitle>
+          <CardDescription>BlogCraft AI에 오신 것을 환영합니다</CardDescription>
+        </CardHeader>
 
-        <Card className="shadow-xl shadow-black/20">
-          <CardContent className="pt-6 space-y-6">
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
-              <div className="flex items-center gap-3 text-sm px-4 py-3 rounded-xl bg-[var(--danger-soft)] text-[var(--danger)] border border-[var(--danger)]/20">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="15" y1="9" x2="9" y2="15" />
-                  <line x1="9" y1="9" x2="15" y2="15" />
-                </svg>
+              <div className="rounded-lg bg-[var(--danger-soft)] border border-[var(--danger)]/30 px-4 py-3 text-sm text-[var(--danger)]">
                 {error}
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="space-y-2">
-                <Label htmlFor="email">이메일</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  autoComplete="email"
-                />
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">이메일</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                autoComplete="email"
+              />
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password">비밀번호</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="비밀번호를 입력하세요"
-                  autoComplete="current-password"
-                />
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">비밀번호</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="비밀번호를 입력하세요"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete="current-password"
+              />
+            </div>
 
-              <Button type="submit" disabled={loading} className="w-full mt-3">
-                {loading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <svg className="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                    </svg>
-                    로그인 중...
-                  </span>
-                ) : "로그인"}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  로그인 중...
+                </span>
+              ) : (
+                "로그인"
+              )}
+            </Button>
 
-        <p className="text-center text-sm text-[var(--text-muted)]">
-          계정이 없으신가요?{" "}
-          <Link href="/signup" className="text-[var(--accent)] hover:underline font-medium">무료로 가입하기</Link>
-        </p>
-      </div>
+            <p className="text-center text-sm text-[var(--text-secondary)]">
+              계정이 없으신가요?{" "}
+              <Link href="/signup" className="text-[var(--accent)] hover:underline font-medium">
+                회원가입
+              </Link>
+            </p>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

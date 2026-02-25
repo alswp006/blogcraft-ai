@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 interface HeroSectionProps {
-  headline: string;
-  subheadline: string;
+  headline?: string;
+  subheadline?: string;
   ctaText?: string;
   ctaHref?: string;
   secondaryCtaText?: string;
@@ -12,73 +12,67 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({
-  headline,
-  subheadline,
+  headline = "AI로 블로그 글 완성",
+  subheadline = "사진과 메모만으로 내 말투를 학습한 AI가 자연스러운 블로그 글을 만들어 드립니다.",
   ctaText = "무료로 시작하기",
   ctaHref = "/signup",
   secondaryCtaText,
   secondaryCtaHref,
 }: HeroSectionProps) {
   return (
-    <section className="relative w-full min-h-[85vh] flex items-center overflow-hidden">
-      {/* Background layers */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[var(--accent)]/8 via-[var(--accent)]/3 to-transparent" />
-      <div className="absolute inset-0 hero-grid-bg opacity-40" />
-      {/* Decorative glow blobs */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[var(--accent)]/6 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/3 left-1/4 w-[300px] h-[300px] bg-purple-600/5 rounded-full blur-3xl pointer-events-none" />
+    <section className="relative w-full min-h-[85vh] flex items-center overflow-hidden bg-[var(--bg)]">
+      {/* Grid background */}
+      <div className="absolute inset-0 hero-grid-bg opacity-60" />
 
-      <div className="relative max-w-6xl mx-auto px-4 md:px-6 lg:px-8 w-full flex flex-col items-center text-center space-y-8 py-24 md:py-32">
-        {/* Badge */}
-        <Badge variant="outline" className="px-4 py-2 rounded-full border-[var(--accent)]/25 bg-[var(--accent)]/8 text-[var(--accent)]">
-          <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse inline-block mr-2" />
-          AI 말투 학습 기능 출시
-        </Badge>
+      {/* Glow blobs */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-[var(--accent)] opacity-[0.06] blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-purple-500 opacity-[0.05] blur-[100px] pointer-events-none" />
 
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight max-w-4xl leading-tight gradient-text">
-          {headline}
-        </h1>
-        <p className="text-lg md:text-xl leading-relaxed text-[var(--text-secondary)] max-w-2xl">
-          {subheadline}
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 pt-2">
-          <Button asChild size="lg" className="px-8 py-4 h-auto text-base shadow-xl shadow-[var(--accent)]/30 hover:shadow-[var(--accent)]/40 hover:-translate-y-0.5">
-            <Link href={ctaHref} className="no-underline">
-              {ctaText}
-            </Link>
-          </Button>
-          {secondaryCtaText && secondaryCtaHref && (
-            <Button asChild variant="outline" size="lg" className="px-8 py-4 h-auto text-base border-[var(--border-hover)] hover:border-[var(--accent)]/30">
-              <Link href={secondaryCtaHref} className="no-underline">
-                {secondaryCtaText}
-              </Link>
+      <div className="relative w-full max-w-6xl mx-auto px-4 md:px-6 lg:px-8 py-32">
+        <div className="max-w-3xl mx-auto text-center">
+          {/* Announcement badge */}
+          <div className="inline-flex mb-6">
+            <Badge variant="secondary" className="px-4 py-1.5 text-xs font-medium border border-[var(--accent)]/30 bg-[var(--accent-soft)] text-[var(--accent)]">
+              ✨ AI 블로그 작성 도구 — 베타 출시
+            </Badge>
+          </div>
+
+          {/* Headline */}
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 leading-[1.1]">
+            <span className="gradient-text">{headline}</span>
+          </h1>
+
+          {/* Subheadline */}
+          <p className="text-lg md:text-xl text-[var(--text-secondary)] mb-10 max-w-2xl mx-auto leading-relaxed">
+            {subheadline}
+          </p>
+
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Button size="lg" asChild className="min-w-[160px]">
+              <Link href={ctaHref} className="no-underline">{ctaText}</Link>
             </Button>
-          )}
-        </div>
+            {secondaryCtaText && secondaryCtaHref && (
+              <Button size="lg" variant="outline" asChild className="min-w-[160px]">
+                <Link href={secondaryCtaHref} className="no-underline">{secondaryCtaText}</Link>
+              </Button>
+            )}
+          </div>
 
-        {/* Social proof */}
-        <div className="flex items-center gap-6 pt-4 text-sm text-[var(--text-muted)]">
-          <span className="flex items-center gap-1.5">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--success)]">
-              <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
-              <polyline points="22 4 12 14.01 9 11.01" />
-            </svg>
-            신용카드 불필요
-          </span>
-          <span className="flex items-center gap-1.5">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--success)]">
-              <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
-              <polyline points="22 4 12 14.01 9 11.01" />
-            </svg>
-            무료 플랜 제공
-          </span>
-          <span className="flex items-center gap-1.5">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--success)]">
-              <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
-              <polyline points="22 4 12 14.01 9 11.01" />
-            </svg>
-            10분 만에 시작
-          </span>
+          {/* Social proof */}
+          <div className="mt-16 pt-8 border-t border-[var(--border)] flex flex-wrap gap-8 justify-center items-center">
+            {[
+              { value: "10,000+", label: "활성 블로거" },
+              { value: "150,000+", label: "게시물 작성" },
+              { value: "10분", label: "평균 작성 시간" },
+              { value: "98%", label: "만족도" },
+            ].map((stat) => (
+              <div key={stat.label} className="text-center">
+                <div className="text-2xl font-bold text-[var(--text)]">{stat.value}</div>
+                <div className="text-sm text-[var(--text-muted)] mt-0.5">{stat.label}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

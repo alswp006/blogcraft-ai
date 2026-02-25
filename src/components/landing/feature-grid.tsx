@@ -1,3 +1,5 @@
+import { Card, CardContent } from "@/components/ui/card";
+
 interface Feature {
   icon: string;
   title: string;
@@ -10,40 +12,35 @@ interface FeatureGridProps {
   features: Feature[];
 }
 
-export function FeatureGrid({ heading, subheading, features }: FeatureGridProps) {
+export function FeatureGrid({
+  heading = "강력한 기능들",
+  subheading = "블로그 작성의 모든 과정을 AI가 도와드립니다",
+  features,
+}: FeatureGridProps) {
   return (
-    <section className="w-full py-20 md:py-28 bg-[var(--bg-elevated)]/40">
-      <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 space-y-12">
-        {(heading || subheading) && (
-          <div className="text-center space-y-3">
-            {heading && (
-              <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-[var(--text)]">
-                {heading}
-              </h2>
-            )}
-            {subheading && (
-              <p className="text-base leading-relaxed text-[var(--text-secondary)] max-w-lg mx-auto">
-                {subheading}
-              </p>
-            )}
-          </div>
-        )}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+    <section className="w-full py-20 bg-[var(--bg-elevated)]/50">
+      <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
+        {/* Section heading */}
+        <div className="text-center mb-14">
+          <h2 className="text-3xl md:text-4xl font-bold text-[var(--text)] mb-4">{heading}</h2>
+          <p className="text-[var(--text-secondary)] text-lg max-w-2xl mx-auto">{subheading}</p>
+        </div>
+
+        {/* Feature grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature) => (
-            <div
+            <Card
               key={feature.title}
-              className="group rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] p-6 md:p-8 space-y-4 hover:shadow-xl hover:shadow-black/20 hover:border-[var(--accent)]/25 hover:-translate-y-1 transition-all duration-300 cursor-default"
+              className="p-6 group cursor-default hover:translate-y-[-2px] transition-transform duration-200"
             >
-              <div className="rounded-xl w-12 h-12 flex items-center justify-center bg-[var(--accent)]/10 text-xl group-hover:bg-[var(--accent)]/15 transition-colors duration-300">
-                {feature.icon}
-              </div>
-              <h3 className="text-lg font-semibold text-[var(--text)]">
-                {feature.title}
-              </h3>
-              <p className="text-sm leading-relaxed text-[var(--text-secondary)]">
-                {feature.description}
-              </p>
-            </div>
+              <CardContent className="p-0">
+                <div className="w-12 h-12 rounded-xl bg-[var(--accent-soft)] flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform duration-200">
+                  {feature.icon}
+                </div>
+                <h3 className="text-base font-semibold text-[var(--text)] mb-2">{feature.title}</h3>
+                <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{feature.description}</p>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>
