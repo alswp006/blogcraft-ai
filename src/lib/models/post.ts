@@ -54,6 +54,33 @@ export function getPostById(postId: string): Post | null {
   return queryOne<Post>("SELECT * FROM posts WHERE id = ?", postId) ?? null;
 }
 
+export function updatePost(
+  postId: string,
+  userId: string,
+  data: Partial<Pick<Post, "title" | "overallNote" | "contentMarkdown" | "status">>,
+): Post | null {
+  const post = queryOne<Post>("SELECT * FROM posts WHERE id = ? AND userId = ?", postId, userId);
+  if (!post) return null;
+
+  const now = isoNowMs();
+  const title = data.title ?? post.title;
+  const overallNote = data.overallNote ?? post.overallNote;
+  const contentMarkdown = data.contentMarkdown ?? post.contentMarkdown;
+  const status = data.status ?? post.status;
+
+  execute(
+    "UPDATE posts SET title = ?, overallNote = ?, contentMarkdown = ?, status = ?, updatedAt = ? WHERE id = ? AND userId = ?",
+    title, overallNote, contentMarkdown, status, now, postId, userId,
+  );
+
+  return { ...post, title, overallNote, contentMarkdown, status, updatedAt: now };
+}
+
+export function deletePost(postId: string, userId: string): boolean {
+  const result = execute("DELETE FROM posts WHERE id = ? AND userId = ?", postId, userId);
+  return result.changes > 0;
+}
+
 export function listPostsByUser(userId: string): Post[] {
   return query<Post>(
     "SELECT * FROM posts WHERE userId = ? ORDER BY updatedAt DESC",

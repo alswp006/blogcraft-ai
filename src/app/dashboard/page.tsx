@@ -42,6 +42,9 @@ export default async function DashboardPage() {
               오늘도 멋진 블로그 글을 작성해 보세요
             </p>
           </div>
+          <Button asChild>
+            <Link href="/dashboard/new" className="no-underline">+ 새 글</Link>
+          </Button>
         </div>
 
         {/* Stats */}
@@ -80,7 +83,7 @@ export default async function DashboardPage() {
                 </p>
               </div>
               <Button asChild>
-                <Link href="/dashboard" className="no-underline">첫 글 작성하기</Link>
+                <Link href="/dashboard/new" className="no-underline">첫 글 작성하기</Link>
               </Button>
             </CardContent>
           </Card>
@@ -88,6 +91,9 @@ export default async function DashboardPage() {
           <div>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-[var(--text)]">최근 글</h2>
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/dashboard/new" className="no-underline">+ 새 글</Link>
+              </Button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {posts.slice(0, 9).map((post) => {
@@ -99,28 +105,30 @@ export default async function DashboardPage() {
                 const status = statusLabels[post.status] ?? statusLabels.draft;
 
                 return (
-                  <Card key={post.id} className="group hover:border-[var(--accent)]/30 transition-colors">
-                    <CardHeader className="pb-2">
-                      <div className="flex items-start justify-between gap-2">
-                        <CardTitle className="text-base line-clamp-2">
-                          {post.title || "제목 없음"}
-                        </CardTitle>
-                        <Badge variant={status.variant} className="flex-shrink-0 text-xs">
-                          {status.text}
-                        </Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      {post.locationName && (
-                        <p className="text-xs text-[var(--text-muted)] mb-2">
-                          📍 {post.locationName}
+                  <Link key={post.id} href={`/dashboard/${post.id}`} className="no-underline">
+                    <Card className="group hover:border-[var(--accent)]/30 transition-colors cursor-pointer">
+                      <CardHeader className="pb-2">
+                        <div className="flex items-start justify-between gap-2">
+                          <CardTitle className="text-base line-clamp-2">
+                            {post.title || "제목 없음"}
+                          </CardTitle>
+                          <Badge variant={status.variant} className="flex-shrink-0 text-xs">
+                            {status.text}
+                          </Badge>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        {post.locationName && (
+                          <p className="text-xs text-[var(--text-muted)] mb-2">
+                            📍 {post.locationName}
+                          </p>
+                        )}
+                        <p className="text-xs text-[var(--text-muted)]">
+                          {new Date(post.updatedAt).toLocaleDateString("ko-KR")}
                         </p>
-                      )}
-                      <p className="text-xs text-[var(--text-muted)]">
-                        {new Date(post.updatedAt).toLocaleDateString("ko-KR")}
-                      </p>
-                    </CardContent>
-                  </Card>
+                      </CardContent>
+                    </Card>
+                  </Link>
                 );
               })}
             </div>
